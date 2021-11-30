@@ -1,0 +1,10 @@
+{{#*inline "page" }}
+<ul>
+    {{#each recipes as |recipe| ~}}
+    <li>
+        {{>recipe_link locale=../locale}}
+    </li>
+    {{/each ~}}
+</ul>
+{{/inline}}
+{{> root show_search=true }}

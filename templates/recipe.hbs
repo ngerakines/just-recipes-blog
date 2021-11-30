@@ -1,0 +1,86 @@
+{{#*inline "page"}}
+<h1 class="jump" id="{{ fnv recipe.name }}">{{ recipe.name }}</h1>
+
+<!--
+This isn't used yet.
+
+{{#if recipe.tags}}
+<ul class="list-inline d-print-none">
+    {{#each recipe.tags as |tag| ~}}
+    <li class="list-inline-item"><span class="badge bg-primary">{{ tag }}</span></li>
+    {{/each}}
+</ul>
+{{/if}}
+
+-->
+
+{{#if recipe.description }}
+<p class="lead">{{ recipe.description }}</p>
+{{/if}}
+
+{{#if recipe.ingredients}}
+<div>
+    <h1>Ingredients</h1>
+    <ul class="list-unstyled">
+        {{#each recipe.ingredients as |item| ~}}
+        <li class="jump ingredient" id="{{ fnv item }}">
+            {{~ item ~}}
+        </li>
+        {{/each ~}}
+    </ul>
+</div>
+{{/if}}
+
+{{#if recipe.equipment }}
+<div>
+    <h1>Equipment</h1>
+    <ul class="list-unstyled">
+        {{#each recipe.equipment as |item| ~}}
+        <li class="jump ingredient" id="{{ fnv item }}">
+            {{~ item ~}}
+        </li>
+        {{/each ~}}
+    </ul>
+</div>
+{{/if}}
+
+{{#each recipe.stages as |stage| ~}}
+<h2 class="jump" id="{{ fnv stage.name }}">{{ stage.name }}</h2>
+
+
+{{#if stage.description ~}}
+<p class="description highlightable jump" id="{{ fnv stage.description }}">{{ stage.description }}</p>
+{{/if ~}}
+<ul class="steps">
+    {{#each stage.steps as |step| ~}}
+    <li>
+        <p class="highlightable jump" id="{{ fnv step }}">{{ step }}</p>
+    </li>
+    {{/each ~}}
+</ul>
+{{#if stage.footer ~}}
+<p class="footer highlightable jump" id="{{ fnv stage.footer }}">{{ stage.footer }}</p>
+{{/if ~}}
+
+{{/each ~}}
+
+{{#if (gt (len recipe.alternate_locales) 1)}}
+{{#with recipe.alternate_locales as |alternate_locales| ~}}
+<div class="d-print-none">
+    <p>Additional Locales:</p>
+    <ul>
+        {{#each alternate_locales as |alternate_locale| ~}}
+        {{#if (ne (lookup alternate_locale 0) ../../locale) }}
+        <li>
+            <a href="/{{ lookup alternate_locale 0 }}/{{ lookup alternate_locale 1 }}">
+                {{ lookup alternate_locale 0 }}
+            </a>
+        </li>
+        {{/if}}
+        {{/each ~}}
+    </ul>
+</div>
+{{/with ~}}
+{{/if}}
+{{/inline}}
+{{> root show_search=true }}

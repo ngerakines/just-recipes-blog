@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="{{ locale }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An easy to navigate and human friendly recipe website.">
+  <meta name="author" content="Nick Gerakines, Mattie Carter, humans.txt">
+  <meta name="generator" content="jrb {{ site.version }}">
+  <base href="{{ site.public_url }}">
+  <title>{{title}}</title>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/bootstrap-icons.css" rel="stylesheet">
+  <link rel="author" href="/humans.txt" />
+  {{!--
+  <link rel="alternate" hreflang="en-gb" href="https://en-gb.example.com/page.html" /> --}}
+  {{#if show_search }}
+  <style>
+    .tt-menu {
+      background-color: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      margin-top: 12px;
+      padding: 8px 0;
+      width: 100px;
+    }
+
+    .tt-suggestion {
+      font-size: 22px;
+      padding: 3px 20px;
+    }
+
+    .tt-suggestion:hover {
+      cursor: pointer;
+      background-color: #0097CF;
+      color: #FFFFFF;
+    }
+
+    .tt-suggestion p {
+      margin: 0;
+    }
+  </style>
+  {{/if}}
+</head>
+
+<body>
+  <div class="container-fluid">
+    <nav class="d-print-none navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">JustRecipes.Blog</a>
+        {{#if show_search }}
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search"
+            autocomplete="off" spellcheck="false">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {{/if}}
+      </div>
+    </nav>
+    <main class="pt-4">
+      {{> page}}
+    </main>
+    <footer class="border-top text-muted">
+      justrecipes.blog is made with <i class="bi bi-heart-fill" role="img" aria-label="love"></i> by Nick Gerakines and Mattie Carter
+      <span class="d-print-none">
+        &middot;
+        <a href="/about/" class="text-reset text-decoration-none"><i role="img" aria-label="About" class="bi bi-question-square-fill"></i></a>
+        &middot;
+        <a href="https://twitter.com/justrecipesblog" class="text-reset text-decoration-none"><i  role="img" aria-label="Twitter" class="bi bi-twitter"></i></a>
+        &middot;
+        <a href="https://github.com/ngerakines/just-recipes-blog" class="text-reset text-decoration-none"><i role="img" aria-label="GitHub" class="bi bi-github"></i></a>
+      </span>
+    </footer>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  {{#if show_search }}
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+  <script src="/js/typeahead.bundle.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var recipes = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: "/{{ locale }}/search.json"
+      });
+      recipes.initialize();
+      $('#search').typeahead(null,
+        {
+          name: 'matched-recipes',
+          displayKey: 'name',
+          source: recipes.ttAdapter(),
+          templates: {
+            empty: "<p>No recipes found</p>",
+            suggestion: Handlebars.compile('<p><a href="\{\{link\}\}">\{\{name\}\}</a></p>')
+          }
+        });
+
+      var $cols = $(".highlightable").click(function (e) {
+        $cols.removeClass("bg-light");
+        $(this).addClass("bg-light");
+      });
+
+      $(".jump").click(function (e) {
+        old_hash = window.location.hash.substr(1)
+        if (old_hash != "") {
+          new_url = window.location.toString().replace(old_hash, e.target.id);
+        } else {
+          new_url = window.location.toString() + "#" + e.target.id;
+        }
+
+        history.pushState({}, '', new_url);
+      });
+      $(".ingredient").click(function (e) {
+        $(this).toggleClass("text-decoration-line-through");
+      });
+    });
+  </script>
+  {{/if}}
+</body>
+</html>

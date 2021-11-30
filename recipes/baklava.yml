@@ -1,0 +1,111 @@
+id: 0A9FEAE5-5684-4E06-B4BB-00645D458585
+locales: ["en_US", "fr_FR"]
+name:
+  en_US: Baklava with walnuts and pistachios
+  fr_FR: Baklava aux noix et pistaches
+slug:
+  en_US: 00645D458585-baklava-with-walnuts-and-pistachios
+  fr_FR: 00645D458585-baklava-aux-noix-et-pistaches
+description:
+  en_US: |
+    A delicious greek desert.
+tags:
+  - en_US: greek
+  - en_US: desert
+ingredients:
+  - en_US: '16 oz phyllo dough'
+  - en_US: '1 1/4 cups unsalted butter, 10 oz or 2 1/2 sticks, melted'
+  - en_US: '0.5 lb walnuts, finely chopped, (about 2 cups)'
+  - en_US: '0.5 lb pistachios, finely chopped, (about 2 cups)'
+  - en_US: 1 tsp ground cinnamon
+  - en_US: 1 cup granulated sugar
+  - en_US: '2 Tbsp lemon juice, juice of 1/2 lemon'
+  - en_US: 3/4 cup water
+  - en_US: 1/2 cup honey
+equipment:
+  - en_US: oven
+  - en_US: stove
+  - en_US: saucepan
+  - en_US: 1 cup measuring container
+  - en_US: knife
+  - en_US: 13x9 non-stick baking pan
+stages:
+  - name: "Preperation"
+    prep_time: 1 hour
+    steps:
+      - en_US: >-
+          Thaw phyllo dough by package instructions (this is best done overnight
+          in the fridge, then place it on the counter for 1 hr before starting
+          your recipe to bring it to room temp).
+      - en_US: >-
+          Trim phyllo dough to fit your baking dish. My phyllo package had 2
+          rolls with a total of 40 sheets that measured 9x14 so I had to trim
+          them slightly. You can trim one stack at a time then cover with a damp
+          towel to keep from drying out.
+      - en_US: >-
+          Butter the bottom and sides of a 13x9 non-stick baking pan.
+  - name:
+      en_US: Honey sauce
+    description: >-
+      The honey sauce is made before the baklava is assembled because it needs
+      to cool.
+    prep_time: 20 minutes
+    steps:
+      - en_US: >-
+          In a medium saucepan, combine 1 cup sugar, 1/2 cup honey, 2 Tbsp lemon
+          juice, and 3/4 cup water. Bring to a boil over med/high heat, stirring
+          until sugar is dissolved, then reduce heat to med/low and boil
+          additional 4 min without stirring. Remove from heat and let syrup cool
+          while preparing baklava.
+  - name: Assembly
+    prep_time: 20 minutes
+    cook_time: 20 minutes
+    steps:
+      - en_US: >-
+          Pulse walnuts 10 times in a food process or until coarsely ground/
+          finely chopped.
+      - en_US: >-
+          In a medium bowl, stir together: all 4 cups finely chopped walnuts and 1
+          tsp cinnamon.
+      - en_US: >-
+          Place 10 phyllo sheets into baking pan one at a time, brushing each
+          sheet with butter once it's in the pan before adding the next (i.e.
+          place phyllo sheet into pan, brush the top with butter, place next
+          phyllo sheet in pan, butter the top, etc. etc.). Keep remaining phyllo
+          covered with a damp towel at all times. Spread about 1/5 of nut
+          mixture (about 3/4 cup) over phyllo dough.
+      - en_US: >-
+          Add 5 buttered sheets of phyllo, then another layer of nuts. Repeat x
+          4. Finish off with 10 layers of buttered phyllo sheets. Brush the very
+          top with butter.
+
+          Here's the order:
+
+          * 10 buttered phyllo sheets, 3/4 cup nut mixture,
+
+          * 5 buttered phyllo sheets, 3/4 cup nut mixture,
+
+          * 5 buttered phyllo sheets, 3/4 cup nut mixture,
+
+          * 5 buttered phyllo sheets, 3/4 cup nut mixture,
+
+          * 5 buttered phyllo sheets, 3/4 cup nut mixture
+
+          * 10 buttered phyllo sheets and butter the top.
+      - en_US: >-
+          Cut pastry into 1 1/2" wide strips, then cut diagonally to form
+          diamond shapes. Bake at 325˚F for 1 hour and 15 min or until tops are
+          golden brown.
+      - en_US: |-
+          Bake at 325˚F for 1 hour and 15 min or until tops are golden brown
+      - en_US: >-
+          Remove from oven and immediately spoon the cooled syrup evenly over
+          the hot baklava (you'll hear it sizzle). This will ensure that it
+          stays crisp rather than soggy. Let baklava cool completely, uncovered
+          and at room temperature
+    footer:
+      en_US: >-
+        For best results, let baklava sit 4-6 hours or overnight at room
+        temperature for the syrup to penetrate and soften the layers. Garnish
+        baklava with finely chopped nuts or drizzle with melted chocolate. Store
+        at room temp, covered with a tea towel for 1 to 2 weeks.
