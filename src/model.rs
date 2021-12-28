@@ -246,6 +246,12 @@ pub struct SearchView {
     pub link: String,
 }
 
+#[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
+pub struct SiteMapView {
+    pub paths: Vec<String>,
+    pub site: SiteView,
+}
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct LocalizedString {
     inner: HashMap<String, String>,

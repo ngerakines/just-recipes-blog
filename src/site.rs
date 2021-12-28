@@ -5,7 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteView};
+use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
 use crate::template::{FNVHelper, LocaleHelper};
 
 pub fn build_site(
@@ -46,6 +46,9 @@ pub fn build_site(
     let mut recipes: Vec<Recipe> = Vec::with_capacity(recipe_files.len());
     let mut recipe_ids: HashSet<String> = HashSet::new();
 
+    let mut sitemap_paths: Vec<String> = Vec::new();
+    sitemap_paths.push("about".to_string());
+
     for recipe_file in &recipe_files {
         let recipe_yaml = fs::read_to_string(&recipe_file)?;
         let deserialized_recipe: Recipe = serde_yaml::from_str(&recipe_yaml)?;
@@ -63,6 +66,8 @@ pub fn build_site(
 
         let mut search_views: Vec<SearchView> = Vec::with_capacity(recipe_files.len());
 
+        sitemap_paths.push(format!("{}", site_locale));
+
         for recipe in &recipes {
             debug!("{}", recipe);
 
@@ -71,13 +76,16 @@ pub fn build_site(
                     continue;
                 }
 
-                let recipe_root = Path::new(&locale_root)
-                    .join(&recipe.slug.clone().localized(Some(locale.clone()))?);
+                let slug_root = &recipe.slug.clone().localized(Some(locale.clone()))?;
+
+                let recipe_root = Path::new(&locale_root).join(slug_root);
                 fs::create_dir_all(&recipe_root).unwrap_or_else(|_| {
                     panic!("unable to create recipe root {}", recipe_root.display())
                 });
 
                 let localized_recipe = recipe.to_partial(Some(locale.clone()), site_locales)?;
+
+                sitemap_paths.push(format!("{}/{}", site_locale, slug_root));
 
                 let recipe_html = handlebars
                     .render(
@@ -174,9 +182,26 @@ pub fn build_site(
     let about_dir = Path::new(public_dir).join("about");
     fs::create_dir_all(&about_dir).expect("cannot create about directory");
     let about_destination = Path::new(&about_dir).join("index.html");
-
     fs::write(&about_destination, about_html)
         .unwrap_or_else(|_| panic!("unable to write about to {}", about_destination.display()));
+
+    let sitemap_xml = handlebars
+        .render(
+            "sitemap",
+            &SiteMapView {
+                paths: sitemap_paths,
+                site: site.clone(),
+            },
+        )
+        .expect("unable to render sitemap");
+    let sitemap_destination = Path::new(&public_dir).join("sitemap.xml");
+
+    fs::write(&sitemap_destination, sitemap_xml).unwrap_or_else(|_| {
+        panic!(
+            "unable to write sitemap to {}",
+            sitemap_destination.display()
+        )
+    });
 
     Ok(())
 }
