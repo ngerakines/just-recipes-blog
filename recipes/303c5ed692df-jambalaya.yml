@@ -3,6 +3,7 @@ id: 681bf47b-d48e-4c42-942b-303c5ed692df
 locales: ["en_US"]
 name: Jambalaya
 slug: 303c5ed692df-jambalaya
+description: This classic southern dish is a crowd pleaser.
 ingredients:
   - 3/4 pound smoked sausage
   - 5 stalks of celery
@@ -35,9 +36,9 @@ stages:
       - Pour in tomatoes into pot and stir.
   - name: Cook
     cook_time: 30 minutes
+    description: Your cook time may vary. I usually let the pot sit for about 40 minutes on low heat.
     steps:
       - Cover and simmer for approximately 25 minutes, or until vegetables start to soften.
-    footer: Your cook time may vary. I usually let the pot sit for about 40 minutes on low heat.
   - name: Serve
     steps:
       - Serve over a bed of rice.
