@@ -52,6 +52,7 @@ impl Recipe {
         &self,
         locale: Option<String>,
         allowed_locales: &[String],
+        images: Vec<(String, String)>,
     ) -> Result<RecipePartial, anyhow::Error> {
         let cook_time: Duration = self
             .stages
@@ -104,6 +105,7 @@ impl Recipe {
                 .into_iter()
                 .map(|x| x.to_partial(locale.clone()).unwrap())
                 .collect(),
+            images,
         })
     }
 
@@ -224,6 +226,7 @@ pub struct RecipePartial {
     pub cook_time: Option<String>,
     pub prep_time: Option<String>,
     pub total_time: Option<String>,
+    pub images: Vec<(String, String)>,
 }
 
 impl RecipePartial {

@@ -12,3 +12,6 @@ pub mod template;
 
 #[cfg(feature = "validate")]
 pub mod validate;
+
+#[cfg(feature = "convert")]
+pub mod image;
