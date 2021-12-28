@@ -5,3 +5,12 @@ command = "cargo run -- --public-url=\"$URL/\" build"
 [context.deploy-preview]
 
 command = "cargo run -- --public-url=\"$DEPLOY_URL/\" build"
+
+# Config for the Netlify Build Plugin: netlify-plugin-minify-html
+[[plugins]]
+  package = "netlify-plugin-minify-html"
+  [plugins.inputs]
+    contexts = ['production']
+  [plugins.inputs.minifierOptions]
+    removeComments = true
+    collapseInlineTagWhitespace = false
