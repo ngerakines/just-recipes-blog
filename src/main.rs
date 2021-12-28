@@ -2,7 +2,7 @@
 extern crate log;
 
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use structopt::StructOpt;
 
 #[cfg(feature = "server")]
@@ -89,25 +89,25 @@ async fn main() -> Result<(), anyhow::Error> {
 }
 
 fn cmd_build(
-    recipe_dir: &PathBuf,
-    static_dir: &PathBuf,
-    templates_dir: &PathBuf,
-    public_dir: &PathBuf,
-    site_locales: &Vec<String>,
-    public_url: &String,
+    recipe_dir: &Path,
+    static_dir: &Path,
+    templates_dir: &Path,
+    public_dir: &Path,
+    site_locales: &[String],
+    public_url: &str,
 ) -> Result<(), anyhow::Error> {
     build_site(
-        &recipe_dir,
-        &static_dir,
-        &templates_dir,
-        &public_dir,
-        &site_locales,
+        recipe_dir,
+        static_dir,
+        templates_dir,
+        public_dir,
+        site_locales,
         SiteView::new(public_url, &built_info::PKG_VERSION.to_string()),
     )
 }
 
 #[cfg(feature = "server")]
-async fn cmd_server(public_dir: &PathBuf, listen: &String) -> Result<(), anyhow::Error> {
+async fn cmd_server(public_dir: &Path, listen: &str) -> Result<(), anyhow::Error> {
     let app = Router::new().nest(
         "/",
         service::get(ServeDir::new(public_dir)).handle_error(|error: std::io::Error| {
@@ -152,7 +152,7 @@ pub async fn shutdown_signal() {
 }
 
 fn cmd_init(
-    recipe_dir: &PathBuf,
+    recipe_dir: &Path,
     recipe_id: Option<Uuid>,
     name: Option<String>,
     mock: bool,

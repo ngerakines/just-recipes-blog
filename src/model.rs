@@ -43,7 +43,7 @@ impl Recipe {
     pub fn to_partial(
         &self,
         locale: Option<String>,
-        allowed_locales: &Vec<String>,
+        allowed_locales: &[String],
     ) -> Result<RecipePartial, anyhow::Error> {
         Ok(RecipePartial {
             id: self.id,
@@ -52,12 +52,7 @@ impl Recipe {
                 .clone()
                 .into_iter()
                 .take_while(|e| allowed_locales.contains(e))
-                .map(|l| {
-                    (
-                        l.clone(),
-                        self.slug.clone().localized(Some(l.clone())).unwrap(),
-                    )
-                })
+                .map(|l| (l.clone(), self.slug.clone().localized(Some(l)).unwrap()))
                 .collect(),
             name: self.name.clone().localized(locale.clone())?,
             slug: self.slug.clone().localized(locale.clone())?,
@@ -129,11 +124,11 @@ impl Recipe {
             locales: vec![US_ENGLISH.to_string()],
             name: LocalizedString::new(&name),
             slug: LocalizedString::new(&slug),
-            description: description,
-            tags: tags,
-            ingredients: ingredients,
-            equipment: equipment,
-            stages: stages,
+            description,
+            tags,
+            ingredients,
+            equipment,
+            stages,
         }
     }
 }
@@ -152,7 +147,7 @@ impl Stage {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
             },
-            steps: localied_vec(&self.steps, locale.clone())?,
+            steps: localied_vec(&self.steps, locale)?,
         })
     }
 
@@ -201,7 +196,7 @@ pub struct SiteView {
 }
 
 impl SiteView {
-    pub fn new(public_url: &String, version: &String) -> Self {
+    pub fn new(public_url: &str, version: &str) -> Self {
         SiteView {
             public_url: public_url.to_string(),
             version: version.to_string(),
@@ -259,7 +254,7 @@ pub struct LocalizedString {
 
 impl LocalizedString {
     pub fn localized(&self, locale: Option<String>) -> Result<String, anyhow::Error> {
-        let search_locale = locale.unwrap_or(US_ENGLISH.to_string());
+        let search_locale = locale.unwrap_or_else(|| US_ENGLISH.to_string());
         if let Some(value) = self.inner.get(&search_locale) {
             return Ok(value.to_string());
         }
@@ -269,9 +264,9 @@ impl LocalizedString {
         return Err(anyhow!("Missing locale: {}", search_locale));
     }
 
-    pub fn new(value: &String) -> Self {
+    pub fn new(value: &str) -> Self {
         let inner = HashMap::from([(US_ENGLISH.to_string(), value.to_string())]);
-        LocalizedString { inner: inner }
+        LocalizedString { inner }
     }
 }
 
@@ -343,7 +338,7 @@ impl<'de> Visitor<'de> for LocalizedStringVisitor {
 }
 
 pub fn localied_vec(
-    values: &Vec<LocalizedString>,
+    values: &[LocalizedString],
     locale: Option<String>,
 ) -> Result<Vec<String>, anyhow::Error> {
     let mut results: Vec<String> = Vec::with_capacity(values.len());
