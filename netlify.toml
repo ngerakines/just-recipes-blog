@@ -1,3 +1,3 @@
 [build]
 
-command = "cargo run -- --public-url='$URL' build"
+command = "cargo run -- --public-url=\"$URL/\" build"
