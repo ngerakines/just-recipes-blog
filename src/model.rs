@@ -139,8 +139,8 @@ impl Stage {
     pub fn to_partial(&self, locale: Option<String>) -> Result<StagePartial, anyhow::Error> {
         Ok(StagePartial {
             name: self.name.clone().localized(locale.clone())?,
-            cook_time: self.cook_time.clone(),
-            prep_time: self.prep_time.clone(),
+            cook_time: self.cook_time,
+            prep_time: self.prep_time,
             description: match self.description.clone() {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
