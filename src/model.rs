@@ -226,6 +226,17 @@ pub struct RecipePartial {
     pub total_time: Option<String>,
 }
 
+impl RecipePartial {
+    pub fn flat_steps(&self) -> Vec<String> {
+        let size = (&self.stages).into_iter().map(|s| s.steps.len()).sum();
+        let mut all_steps = Vec::with_capacity(size);
+        for stage in &self.stages {
+            all_steps.extend(stage.steps.clone());
+        }
+            all_steps
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct StagePartial {
     pub name: String,
@@ -273,6 +284,7 @@ pub struct RecipeView {
     pub title: String,
     pub recipe: RecipePartial,
     pub site: SiteView,
+    pub flat_steps: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]

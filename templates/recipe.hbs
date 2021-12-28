@@ -1,4 +1,28 @@
 {{#*inline "page"}}
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+
+      "name": "{{ escape recipe.name }}",      
+{{#if recipe.description }}
+      "description": "{{ escape recipe.description }}",
+{{/if}}
+{{#if recipe.ingredients}}
+      "recipeIngredient": [
+{{#each recipe.ingredients as |item| ~}}
+        {{#if (gt @index 0) }},{{/if}}"{{~ escape item ~}}"
+{{/each ~}}
+      ],
+{{/if}}
+      "recipeInstructions": [
+{{#each flat_steps as |item| ~}}
+        {{#if (gt @index 0) }},{{/if}}"{{~ escape item ~}}"
+{{/each ~}}
+      ]
+    }
+</script>
+
 <h1 class="jump" id="{{ fnv recipe.name }}">{{ recipe.name }}</h1>
 
 {{#if recipe.description }}
@@ -8,13 +32,13 @@
 
 {{#if recipe.total_time ~}}
 <ul class="list-inline">
-  <li class="list-inline-item">Total: {{ recipe.total_time }}</li>
-  {{#if recipe.prep_time ~}}
-<li class="list-inline-item">Prep: {{ recipe.prep_time }}</li>
-{{/if ~}}
-{{#if recipe.cook_time ~}}
-  <li class="list-inline-item">Cook: {{ recipe.cook_time }}</li>
-{{/if ~}}
+    <li class="list-inline-item">Total: {{ recipe.total_time }}</li>
+    {{#if recipe.prep_time ~}}
+    <li class="list-inline-item">Prep: {{ recipe.prep_time }}</li>
+    {{/if ~}}
+    {{#if recipe.cook_time ~}}
+    <li class="list-inline-item">Cook: {{ recipe.cook_time }}</li>
+    {{/if ~}}
 </ul>
 {{/if ~}}
 
@@ -53,13 +77,13 @@
 {{/if ~}}
 {{#if stage.total_time ~}}
 <ul class="list-inline">
-  <li class="list-inline-item">Total: {{ stage.total_time }}</li>
-  {{#if stage.prep_time ~}}
-<li class="list-inline-item">Prep: {{ stage.prep_time }}</li>
-{{/if ~}}
-{{#if stage.cook_time ~}}
-  <li class="list-inline-item">Cook: {{ stage.cook_time }}</li>
-{{/if ~}}
+    <li class="list-inline-item">Total: {{ stage.total_time }}</li>
+    {{#if stage.prep_time ~}}
+    <li class="list-inline-item">Prep: {{ stage.prep_time }}</li>
+    {{/if ~}}
+    {{#if stage.cook_time ~}}
+    <li class="list-inline-item">Cook: {{ stage.cook_time }}</li>
+    {{/if ~}}
 </ul>
 {{/if ~}}
 
