@@ -17,7 +17,7 @@
 {{/if}}
       "recipeInstructions": [
 {{#each flat_steps as |item| ~}}
-        {{#if (gt @index 0) }},{{/if}}"{{~ escape item ~}}"
+        {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape item ~}}"}
 {{/each ~}}
       ]
     }
