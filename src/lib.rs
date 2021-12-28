@@ -2,7 +2,8 @@
 #![deny(missing_debug_implementations, bad_style)]
 
 extern crate pretty_env_logger;
-#[macro_use] extern crate log;
+#[macro_use]
+extern crate log;
 
 extern crate slugify;
 
