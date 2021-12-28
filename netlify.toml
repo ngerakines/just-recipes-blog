@@ -1,3 +1,7 @@
 [build]
 
-command = "cargo run -- --public-url='$URL' build"
+command = "cargo run -- --public-url=\"$URL/\" build"
+
+[context.deploy-preview]
+
+command = "cargo run -- --public-url=\"$DEPLOY_URL/\" build"
