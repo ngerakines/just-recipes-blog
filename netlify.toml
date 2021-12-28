@@ -13,4 +13,6 @@ command = "cargo run -- --public-url=\"$DEPLOY_URL/\" build"
     contexts = ['production']
   [plugins.inputs.minifierOptions]
     removeComments = true
-    collapseInlineTagWhitespace = false
+    collapseWhitespace = true
+    collapseInlineTagWhitespace = true
+    conservativeCollapse = true
