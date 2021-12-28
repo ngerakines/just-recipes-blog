@@ -20,6 +20,9 @@ use jrb::site::build_site;
 #[cfg(feature = "validate")]
 use jrb::validate::validate_recipes;
 
+#[cfg(feature = "convert")]
+use jrb::image::generate_thumbnails;
+
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
 }
@@ -62,6 +65,9 @@ enum Command {
     #[cfg(feature = "validate")]
     Validate {},
 
+    #[cfg(feature = "convert")]
+    Convert {},
+
     Init {
         #[structopt(long)]
         id: Option<Uuid>,
@@ -88,10 +94,16 @@ async fn main() -> Result<(), anyhow::Error> {
             &opt.locales,
             &opt.public_url,
         ),
+
         #[cfg(feature = "server")]
         Command::Server { listen } => cmd_server(&opt.public_dir, &listen).await,
+
         #[cfg(feature = "validate")]
         Command::Validate {} => cmd_validate(&opt.recipe_dir).await,
+
+        #[cfg(feature = "convert")]
+        Command::Convert {} => cmd_convert(&opt.recipe_dir).await,
+
         Command::Init { id, name, mock } => cmd_init(&opt.recipe_dir, id, name, mock),
     }
 }
@@ -117,6 +129,11 @@ fn cmd_build(
 #[cfg(feature = "validate")]
 async fn cmd_validate(recipe_dir: &Path) -> Result<(), anyhow::Error> {
     Ok(validate_recipes(recipe_dir)?)
+}
+
+#[cfg(feature = "convert")]
+async fn cmd_convert(recipe_dir: &Path) -> Result<(), anyhow::Error> {
+    Ok(generate_thumbnails(recipe_dir)?)
 }
 
 #[cfg(feature = "server")]

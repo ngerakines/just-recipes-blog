@@ -5,6 +5,13 @@
       "@type": "Recipe",
 
       "name": "{{ escape recipe.name }}",      
+{{#if recipe.images }}
+      "image": [
+      {{#each recipe.images as |image| }}
+      {{#if (gt @index 0) }},{{/if}}"{{ ../site.public_url }}{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 1 }}"
+{{/each}}
+      ],
+{{/if}}
 {{#if recipe.description }}
       "description": "{{ escape recipe.description }}",
 {{/if}}
@@ -29,7 +36,6 @@
 <p class="lead">{{ recipe.description }}</p>
 {{/if}}
 
-
 {{#if recipe.total_time ~}}
 <ul class="list-inline">
     <li class="list-inline-item">Total: {{ recipe.total_time }}</li>
@@ -41,6 +47,18 @@
     {{/if ~}}
 </ul>
 {{/if ~}}
+
+{{#if recipe.images }}
+<div class="row pt-3 pb-3 d-print-none">
+{{#each recipe.images as |image| }}
+    <div class="col">
+<a href="/{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 1 }}">
+<img src="/{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 0 }}" class="img-thumbnail" alt="preview image of {{ escape ../recipe.name }}">
+</a>
+</div>
+{{/each}}
+</div>
+{{/if}}
 
 {{#if recipe.ingredients}}
 <div>

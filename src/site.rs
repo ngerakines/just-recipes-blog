@@ -67,6 +67,19 @@ pub fn build_site(
         for recipe in &recipes {
             debug!("{}", recipe);
 
+            let image_path = Path::new(&recipe_dir).join(format!("{}.jpg", recipe.id));
+            let thumbnail_path =
+                Path::new(&recipe_dir).join(format!("{}_thumbnail.jpg", recipe.id));
+
+            let mut images: Vec<(String, String)> = Vec::new();
+            let has_images = image_path.exists() && thumbnail_path.exists();
+            if has_images {
+                images.push((
+                    format!("{}_thumbnail.jpg", recipe.id),
+                    format!("{}.jpg", recipe.id),
+                ));
+            }
+
             for locale in &recipe.locales {
                 if locale != site_locale {
                     continue;
@@ -79,7 +92,16 @@ pub fn build_site(
                     panic!("unable to create recipe root {}", recipe_root.display())
                 });
 
-                let localized_recipe = recipe.to_partial(Some(locale.clone()), site_locales)?;
+                if has_images {
+                    fs::copy(&image_path, recipe_root.join(format!("{}.jpg", recipe.id)))?;
+                    fs::copy(
+                        &thumbnail_path,
+                        recipe_root.join(format!("{}_thumbnail.jpg", recipe.id)),
+                    )?;
+                }
+
+                let localized_recipe =
+                    recipe.to_partial(Some(locale.clone()), site_locales, images.clone())?;
 
                 sitemap_paths.push(format!("{}/{}", site_locale, slug_root));
 
@@ -95,7 +117,7 @@ pub fn build_site(
                         },
                     )
                     .unwrap();
-                // .unwrap_or_else(|_| panic!("unable to render recipe {}", recipe.id));
+
                 let destination_html = recipe_root.join("index.html");
                 fs::write(&destination_html, recipe_html).unwrap_or_else(|_| {
                     panic!(
