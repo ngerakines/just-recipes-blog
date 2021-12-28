@@ -228,7 +228,7 @@ pub struct RecipePartial {
 
 impl RecipePartial {
     pub fn flat_steps(&self) -> Vec<String> {
-        let size = (&self.stages).into_iter().map(|s| s.steps.len()).sum();
+        let size = (&self.stages).iter().map(|s| s.steps.len()).sum();
         let mut all_steps = Vec::with_capacity(size);
         for stage in &self.stages {
             all_steps.extend(stage.steps.clone());
