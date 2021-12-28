@@ -233,7 +233,7 @@ impl RecipePartial {
         for stage in &self.stages {
             all_steps.extend(stage.steps.clone());
         }
-            all_steps
+        all_steps
     }
 }
 
