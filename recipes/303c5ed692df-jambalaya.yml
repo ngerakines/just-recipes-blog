@@ -1,0 +1,44 @@
+---
+id: 681bf47b-d48e-4c42-942b-303c5ed692df
+locales: ["en_US"]
+name: Jambalaya
+slug: 303c5ed692df-jambalaya
+description: This classic southern dish is a crowd pleaser.
+ingredients:
+  - 3/4 pound smoked sausage
+  - 5 stalks of celery
+  - 1 1/2 bell peppers
+  - 2 medium onions
+  - 1/2 teaspoon garlic powder
+  - 1/2 teaspoon thyme
+  - 1/4 teaspon cayenne pepper
+  - 2 bay leaves
+  - 1/4 teaspoon salt
+  - 1 1-pound 12-ounce can of diced tomatoes
+equipment:
+  - 5 quart dutch oven or similar stove top pot 
+stages:
+  - name: Prepare
+    prep_time: 20 minutes
+    steps:
+      - Chop celery into 1/2 inch pieces
+      - Chop bell peppers into 1/2 inch pieces
+      - Chop onions into 1/2 inch pieces
+      - Chop sausage into 1/2 inch pieces
+  - name: Brown and mix
+    cook_time: 20 minutes
+    steps:
+      - Heat pot to medium heat.
+      - Cook sausage pieces in pot until thye begin to brown.
+      - Reduce heat to simmer.
+      - Add celery, onion, and bell pepper, and toss lightly to coat with sausage drippings.
+      - Add garlic powder, thyme, cayenne pepper, salt, and bay leaves, and stir.
+      - Pour in tomatoes into pot and stir.
+  - name: Cook
+    cook_time: 30 minutes
+    description: Your cook time may vary. I usually let the pot sit for about 40 minutes on low heat.
+    steps:
+      - Cover and simmer for approximately 25 minutes, or until vegetables start to soften.
+  - name: Serve
+    steps:
+      - Serve over a bed of rice.

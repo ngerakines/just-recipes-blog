@@ -1,0 +1,47 @@
+---
+id: 6d15fe48-155b-4fe6-ad1e-e294c5688647
+locales: ["en_US"]
+name: Dutch Oven Chicken Tacos
+slug: e294c5688647-dutch-oven-chicken-tacos
+ingredients:
+  - 3 tablespoons of unsalted butter
+  - 4 garlic cloves
+  - 1-2 chipotle chiles in adobe sauce
+  - 3/4 cups of fresh cilantro
+  - 1/2 cups of orange juice
+  - 1 tablespoon of Worcestshire sauce
+  - 1 1/2 pounds of boneless, skinless chicken brests, trimmed
+  - 1 teaspoon of yellow mustard
+  - 12 flour tortillas
+  - 3-6 lime wedges
+  - 2 avacadoes
+  - 2 small tomatoes
+equipment:
+  - dutch oven
+stages:
+  - name: Preperation
+    prep_time: 20 minutes
+    steps:
+      - Mince chiles and set aside.
+      - Mince garlic cloves
+      - Chop cilantro and set aside 1/2 cup
+    footer: The recipe calls for a can of chiles in adobe sauce, but I usually use 1 or 2 and put the rest in the fridge for another day.
+  - name: Cook
+    cook_time: 30 minutes
+    steps:
+      - Melt butter in dutch oven over medium-high heat.
+      - Add garlic and chipotle, and cook until fragrant for about a minute.
+      - Stir in 1/2 cup of cilantro, orange juice, and Worcestshire sauce.
+      - Bring to simmer.
+      - Nestle chicken into pot.
+      - Reduce heat to medium-low, cover, and cook until chicken reads 160 degrees fahrenheit, flipping chicken half-way. This takes about 15-20 minutes.
+      - Transfer chicken to cutting board, let cool slightly
+      - Shred into bite size pieces
+      - Set dutch oven to medium-high heat and cook liquid left in pot until reduced to 1/4 cup. This takes up to 5 minutes.
+      - Remove dutch oven from heat and whisk in mustard.
+      - Add shredded chicken, remaining 1/4 cup of cilantro
+      - Toss to combine ingredients in dutch oven
+  - name: Serve
+    steps:
+      - Serve with tortillas and lime wedges.
+    footer: Diced avacadoes, diced tomatoes, shredded lettuce, sthredded, cheese, and sour cream make execellent additions.
