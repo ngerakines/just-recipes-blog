@@ -1,6 +1,12 @@
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'build.rs'
+      - 'Cargo.*'
 
-name: Rust ci
+
+name: Rust CI
 
 jobs:
   check:
@@ -64,17 +70,3 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: test
-
-  validate_recipes:
-    name: Validate Recipes
-    needs: [clippy, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-      - uses: actions-rs/cargo@v1
-        with:
-          command: run
-          args: --all-features -- validate

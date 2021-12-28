@@ -1,19 +1,6 @@
 {{#*inline "page"}}
 <h1 class="jump" id="{{ fnv recipe.name }}">{{ recipe.name }}</h1>
 
-<!--
-This isn't used yet.
-
-{{#if recipe.tags}}
-<ul class="list-inline d-print-none">
-    {{#each recipe.tags as |tag| ~}}
-    <li class="list-inline-item"><span class="badge bg-primary">{{ tag }}</span></li>
-    {{/each}}
-</ul>
-{{/if}}
-
--->
-
 {{#if recipe.description }}
 <p class="lead">{{ recipe.description }}</p>
 {{/if}}
