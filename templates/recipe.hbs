@@ -5,6 +5,19 @@
 <p class="lead">{{ recipe.description }}</p>
 {{/if}}
 
+
+{{#if recipe.total_time ~}}
+<ul class="list-inline">
+  <li class="list-inline-item">Total: {{ recipe.total_time }}</li>
+  {{#if recipe.prep_time ~}}
+<li class="list-inline-item">Prep: {{ recipe.prep_time }}</li>
+{{/if ~}}
+{{#if recipe.cook_time ~}}
+  <li class="list-inline-item">Cook: {{ recipe.cook_time }}</li>
+{{/if ~}}
+</ul>
+{{/if ~}}
+
 {{#if recipe.ingredients}}
 <div>
     <h1>Ingredients</h1>
@@ -38,6 +51,18 @@
 {{#if stage.description ~}}
 <p class="description highlightable jump" id="{{ fnv stage.description }}">{{ stage.description }}</p>
 {{/if ~}}
+{{#if stage.total_time ~}}
+<ul class="list-inline">
+  <li class="list-inline-item">Total: {{ stage.total_time }}</li>
+  {{#if stage.prep_time ~}}
+<li class="list-inline-item">Prep: {{ stage.prep_time }}</li>
+{{/if ~}}
+{{#if stage.cook_time ~}}
+  <li class="list-inline-item">Cook: {{ stage.cook_time }}</li>
+{{/if ~}}
+</ul>
+{{/if ~}}
+
 <ul class="steps">
     {{#each stage.steps as |step| ~}}
     <li>
