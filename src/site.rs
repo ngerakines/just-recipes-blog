@@ -1,19 +1,15 @@
 use handlebars::Handlebars;
-use std::{
-    collections::HashSet,
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{collections::HashSet, fs, path::Path};
 
 use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
 use crate::template::{FNVHelper, LocaleHelper};
 
 pub fn build_site(
-    recipe_dir: &PathBuf,
-    static_dir: &PathBuf,
-    templates_dir: &PathBuf,
-    public_dir: &PathBuf,
-    site_locales: &Vec<String>,
+    recipe_dir: &Path,
+    static_dir: &Path,
+    templates_dir: &Path,
+    public_dir: &Path,
+    site_locales: &[String],
     site: SiteView,
 ) -> Result<(), anyhow::Error> {
     let public_dir_exists: bool = Path::new(public_dir).is_dir();
@@ -46,14 +42,13 @@ pub fn build_site(
     let mut recipes: Vec<Recipe> = Vec::with_capacity(recipe_files.len());
     let mut recipe_ids: HashSet<String> = HashSet::new();
 
-    let mut sitemap_paths: Vec<String> = Vec::new();
-    sitemap_paths.push("about".to_string());
+    let mut sitemap_paths: Vec<String> = vec!["about".to_string()];
 
     for recipe_file in &recipe_files {
         let recipe_yaml = fs::read_to_string(&recipe_file)?;
         let deserialized_recipe: Recipe = serde_yaml::from_str(&recipe_yaml)?;
 
-        if recipe_ids.insert(deserialized_recipe.id.to_string()) == false {
+        if !recipe_ids.insert(deserialized_recipe.id.to_string()) {
             error!("duplicate recipe id: {}", deserialized_recipe.id);
             continue;
         }
@@ -66,7 +61,7 @@ pub fn build_site(
 
         let mut search_views: Vec<SearchView> = Vec::with_capacity(recipe_files.len());
 
-        sitemap_paths.push(format!("{}", site_locale));
+        sitemap_paths.push(site_locale.to_string());
 
         for recipe in &recipes {
             debug!("{}", recipe);
@@ -159,7 +154,7 @@ pub fn build_site(
         .render(
             "index",
             &HomeView {
-                locales: site_locales.clone(),
+                locales: site_locales.to_vec(),
                 title: "Just Recipes - Home".to_string(),
                 site: site.clone(),
             },
@@ -173,7 +168,7 @@ pub fn build_site(
         .render(
             "about",
             &HomeView {
-                locales: site_locales.clone(),
+                locales: site_locales.to_vec(),
                 title: "Just Recipes Blog - About".to_string(),
                 site: site.clone(),
             },
@@ -190,7 +185,7 @@ pub fn build_site(
             "sitemap",
             &SiteMapView {
                 paths: sitemap_paths,
-                site: site.clone(),
+                site,
             },
         )
         .expect("unable to render sitemap");
