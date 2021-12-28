@@ -1,4 +1,5 @@
 use anyhow::anyhow;
+use humantime::format_duration;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use serde::ser::{Serialize, Serializer};
 use serde::{Deserialize as DeserializeMacro, Serialize as SerializeMacro};
@@ -52,6 +53,22 @@ impl Recipe {
         locale: Option<String>,
         allowed_locales: &[String],
     ) -> Result<RecipePartial, anyhow::Error> {
+        let cook_time: Duration = self
+            .stages
+            .clone()
+            .into_iter()
+            .fold(Duration::new(0, 0), |sum, val| {
+                sum + val.cook_time.unwrap_or_default()
+            });
+        let prep_time: Duration = self
+            .stages
+            .clone()
+            .into_iter()
+            .fold(Duration::new(0, 0), |sum, val| {
+                sum + val.prep_time.unwrap_or_default()
+            });
+        let total_time = cook_time + prep_time;
+
         Ok(RecipePartial {
             id: self.id,
             alternate_locales: self
@@ -61,6 +78,18 @@ impl Recipe {
                 .take_while(|e| allowed_locales.contains(e))
                 .map(|l| (l.clone(), self.slug.clone().localized(Some(l)).unwrap()))
                 .collect(),
+            cook_time: match cook_time.is_zero() {
+                false => Some(format_duration(cook_time).to_string()),
+                true => None,
+            },
+            prep_time: match prep_time.is_zero() {
+                false => Some(format_duration(prep_time).to_string()),
+                true => None,
+            },
+            total_time: match total_time.is_zero() {
+                false => Some(format_duration(total_time).to_string()),
+                true => None,
+            },
             name: self.name.clone().localized(locale.clone())?,
             slug: self.slug.clone().localized(locale.clone())?,
             description: match self.description.clone() {
@@ -137,10 +166,24 @@ impl Recipe {
 
 impl Stage {
     pub fn to_partial(&self, locale: Option<String>) -> Result<StagePartial, anyhow::Error> {
+        let cook_time = self.cook_time.unwrap_or_default();
+        let prep_time = self.prep_time.unwrap_or_default();
+        let total_time = cook_time + prep_time;
+
         Ok(StagePartial {
             name: self.name.clone().localized(locale.clone())?,
-            cook_time: self.cook_time,
-            prep_time: self.prep_time,
+            cook_time: match cook_time.is_zero() {
+                false => Some(format_duration(cook_time).to_string()),
+                true => None,
+            },
+            prep_time: match prep_time.is_zero() {
+                false => Some(format_duration(prep_time).to_string()),
+                true => None,
+            },
+            total_time: match total_time.is_zero() {
+                false => Some(format_duration(total_time).to_string()),
+                true => None,
+            },
             description: match self.description.clone() {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
@@ -178,13 +221,17 @@ pub struct RecipePartial {
     pub ingredients: Vec<String>,
     pub equipment: Vec<String>,
     pub stages: Vec<StagePartial>,
+    pub cook_time: Option<String>,
+    pub prep_time: Option<String>,
+    pub total_time: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct StagePartial {
     pub name: String,
-    pub cook_time: Option<Duration>,
-    pub prep_time: Option<Duration>,
+    pub cook_time: Option<String>,
+    pub prep_time: Option<String>,
+    pub total_time: Option<String>,
     pub description: Option<String>,
     pub footer: Option<String>,
     pub steps: Vec<String>,

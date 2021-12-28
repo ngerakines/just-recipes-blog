@@ -1,4 +1,3 @@
-extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
@@ -77,8 +76,6 @@ enum Command {
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    pretty_env_logger::init();
-
     let opt = Opt::from_args();
     debug!("{:?}", opt);
 
