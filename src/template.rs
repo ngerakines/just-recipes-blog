@@ -5,6 +5,7 @@ use handlebars::{
 
 use fnv::FnvHasher;
 use serde_json::value::Value as Json;
+use std::fmt::Write;
 use std::format;
 use std::hash::Hasher;
 
@@ -71,4 +72,50 @@ impl HelperDef for FNVHelper {
         out.write(format!("{:x}", checksum).as_str())?;
         Ok(())
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct EscapeHelper;
+
+impl HelperDef for EscapeHelper {
+    fn call<'reg: 'rc, 'rc>(
+        &self,
+        h: &Helper,
+        _: &Handlebars,
+        _: &Context,
+        _: &mut RenderContext,
+        out: &mut dyn Output,
+    ) -> HelperResult {
+        let param = h
+            .param(0)
+            .ok_or_else(|| RenderError::new("Param not found for helper \"escape\""))?;
+
+        out.write(&escape(param.value().as_str().unwrap()))?;
+        Ok(())
+    }
+}
+
+fn escape(src: &str) -> String {
+    let mut escaped = String::with_capacity(src.len());
+    let mut utf16_buf = [0u16; 2];
+    for c in src.chars() {
+        match c {
+            '\x08' => escaped += "\\b",
+            '\x0c' => escaped += "\\f",
+            '\n' => escaped += "\\n",
+            '\r' => escaped += "\\r",
+            '\t' => escaped += "\\t",
+            '"' => escaped += "\\\"",
+            ' ' => escaped += " ",
+            '\\' => escaped += "\\",
+            c if c.is_ascii_graphic() => escaped.push(c),
+            c => {
+                let encoded = c.encode_utf16(&mut utf16_buf);
+                for utf16 in encoded {
+                    write!(&mut escaped, "\\u{:04X}", utf16).unwrap();
+                }
+            }
+        }
+    }
+    escaped
 }

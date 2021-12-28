@@ -2,7 +2,7 @@ use handlebars::Handlebars;
 use std::{collections::HashSet, fs, path::Path};
 
 use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
-use crate::template::{FNVHelper, LocaleHelper};
+use crate::template::{EscapeHelper, FNVHelper, LocaleHelper};
 
 pub fn build_site(
     recipe_dir: &Path,
@@ -26,6 +26,7 @@ pub fn build_site(
     let mut handlebars = Handlebars::new();
 
     handlebars.set_strict_mode(true);
+    handlebars.register_helper("escape", Box::new(EscapeHelper));
     handlebars.register_helper("locale-helper", Box::new(LocaleHelper));
     handlebars.register_helper("fnv", Box::new(FNVHelper));
     handlebars
@@ -90,6 +91,7 @@ pub fn build_site(
                             title: format!("Just Recipes - {}", localized_recipe.name).to_string(),
                             recipe: localized_recipe.clone(),
                             site: site.clone(),
+                            flat_steps: localized_recipe.flat_steps(),
                         },
                     )
                     .unwrap();
