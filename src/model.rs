@@ -4,6 +4,7 @@ use serde::ser::{Serialize, Serializer};
 use serde::{Deserialize as DeserializeMacro, Serialize as SerializeMacro};
 use std::collections::HashMap;
 use std::fmt;
+use std::time::Duration;
 use uuid::Uuid;
 
 use slugify::slugify;
@@ -17,7 +18,6 @@ pub struct Recipe {
     pub name: LocalizedString,
     pub slug: LocalizedString,
     pub description: Option<LocalizedString>,
-    pub tags: Vec<LocalizedString>,
     pub ingredients: Vec<LocalizedString>,
     pub equipment: Vec<LocalizedString>,
     pub stages: Vec<Stage>,
@@ -26,8 +26,15 @@ pub struct Recipe {
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct Stage {
     pub name: LocalizedString,
-    pub cook_time: Option<String>,
-    pub prep_time: Option<String>,
+
+    #[serde(default)]
+    #[serde(with = "humantime_serde")]
+    pub cook_time: Option<Duration>,
+
+    #[serde(default)]
+    #[serde(with = "humantime_serde")]
+    pub prep_time: Option<Duration>,
+
     pub description: Option<LocalizedString>,
     pub footer: Option<LocalizedString>,
     pub steps: Vec<LocalizedString>,
@@ -60,7 +67,6 @@ impl Recipe {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
             },
-            tags: localied_vec(&self.tags, locale.clone())?,
             ingredients: localied_vec(&self.ingredients, locale.clone())?,
             equipment: localied_vec(&self.equipment, locale.clone())?,
             stages: self
@@ -99,10 +105,6 @@ impl Recipe {
             )),
             false => None,
         };
-        let tags: Vec<LocalizedString> = match mock {
-            true => vec![LocalizedString::new(&"food".to_string())],
-            false => Vec::new(),
-        };
         let ingredients: Vec<LocalizedString> = match mock {
             true => vec![
                 LocalizedString::new(&"celery".to_string()),
@@ -125,7 +127,7 @@ impl Recipe {
             name: LocalizedString::new(&name),
             slug: LocalizedString::new(&slug),
             description,
-            tags,
+
             ingredients,
             equipment,
             stages,
@@ -137,8 +139,8 @@ impl Stage {
     pub fn to_partial(&self, locale: Option<String>) -> Result<StagePartial, anyhow::Error> {
         Ok(StagePartial {
             name: self.name.clone().localized(locale.clone())?,
-            cook_time: self.cook_time.clone(),
-            prep_time: self.prep_time.clone(),
+            cook_time: self.cook_time,
+            prep_time: self.prep_time,
             description: match self.description.clone() {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
@@ -173,7 +175,6 @@ pub struct RecipePartial {
     pub name: String,
     pub slug: String,
     pub description: Option<String>,
-    pub tags: Vec<String>,
     pub ingredients: Vec<String>,
     pub equipment: Vec<String>,
     pub stages: Vec<StagePartial>,
@@ -182,8 +183,8 @@ pub struct RecipePartial {
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct StagePartial {
     pub name: String,
-    pub cook_time: Option<String>,
-    pub prep_time: Option<String>,
+    pub cook_time: Option<Duration>,
+    pub prep_time: Option<Duration>,
     pub description: Option<String>,
     pub footer: Option<String>,
     pub steps: Vec<String>,
@@ -249,7 +250,7 @@ pub struct SiteMapView {
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct LocalizedString {
-    inner: HashMap<String, String>,
+    pub inner: HashMap<String, String>,
 }
 
 impl LocalizedString {
@@ -267,6 +268,10 @@ impl LocalizedString {
     pub fn new(value: &str) -> Self {
         let inner = HashMap::from([(US_ENGLISH.to_string(), value.to_string())]);
         LocalizedString { inner }
+    }
+
+    pub fn values(&self) -> Result<Vec<String>, anyhow::Error> {
+        Ok(self.inner.values().cloned().collect::<Vec<String>>())
     }
 }
 

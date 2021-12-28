@@ -1,3 +1,4 @@
+extern crate pretty_env_logger;
 #[macro_use]
 extern crate log;
 
@@ -16,6 +17,9 @@ use uuid::Uuid;
 
 use jrb::model::{Recipe, SiteView};
 use jrb::site::build_site;
+
+#[cfg(feature = "validate")]
+use jrb::validate::validate_recipes;
 
 pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
@@ -56,6 +60,9 @@ enum Command {
         listen: String,
     },
 
+    #[cfg(feature = "validate")]
+    Validate {},
+
     Init {
         #[structopt(long)]
         id: Option<Uuid>,
@@ -70,6 +77,8 @@ enum Command {
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
+    pretty_env_logger::init();
+
     let opt = Opt::from_args();
     debug!("{:?}", opt);
 
@@ -84,6 +93,8 @@ async fn main() -> Result<(), anyhow::Error> {
         ),
         #[cfg(feature = "server")]
         Command::Server { listen } => cmd_server(&opt.public_dir, &listen).await,
+        #[cfg(feature = "validate")]
+        Command::Validate {} => cmd_validate(&opt.recipe_dir).await,
         Command::Init { id, name, mock } => cmd_init(&opt.recipe_dir, id, name, mock),
     }
 }
@@ -104,6 +115,11 @@ fn cmd_build(
         site_locales,
         SiteView::new(public_url, &built_info::PKG_VERSION.to_string()),
     )
+}
+
+#[cfg(feature = "validate")]
+async fn cmd_validate(recipe_dir: &Path) -> Result<(), anyhow::Error> {
+    Ok(validate_recipes(recipe_dir)?)
 }
 
 #[cfg(feature = "server")]
