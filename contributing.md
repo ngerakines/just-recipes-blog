@@ -28,7 +28,6 @@ When localizing a recipe, the following checklist may help:
 * [ ] `name` Recipe name
 * [ ] `slug` The unique URL for the recipe
 * [ ] `description` The description of the recipe
-* [ ] `tags` A list of tags that can help categorize and label the recipe
 * [ ] `ingredients` A list of materials and ingredients that make up the recipe
 * [ ] `equipment` A list of equipment and materials that are used to product the thing being cooked
 * [ ] `stages.*.name` The name of each stage in the recipe
