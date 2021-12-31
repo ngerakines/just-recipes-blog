@@ -1,9 +1,13 @@
 #[macro_use]
 extern crate log;
 
+#[macro_use]
+extern crate anyhow;
+
 use std::fs;
 use std::path::{Path, PathBuf};
 use structopt::StructOpt;
+use url::Url;
 
 #[cfg(feature = "server")]
 use axum::{http::StatusCode, service, Router};
@@ -27,25 +31,49 @@ pub mod built_info {
     include!(concat!(env!("OUT_DIR"), "/built.rs"));
 }
 
+fn parse_url(src: &str) -> Result<String, anyhow::Error> {
+    let mut base_url = Url::parse(src)?;
+
+    if base_url.scheme() != "https" && base_url.scheme() != "http" {
+        return Err(anyhow!("invalid url schema: {}", src));
+    }
+    if !base_url.has_host() {
+        return Err(anyhow!("invalid url host: {}", src));
+    }
+    base_url.set_fragment(None);
+    base_url.set_query(None);
+
+    if !base_url.path().ends_with('/') {
+        return Err(anyhow!("invalid url path: {}", src));
+    }
+
+    Ok(base_url.to_string())
+}
+
 #[derive(Debug, StructOpt, Clone)]
 #[structopt(about = "The justrecipes.blog builder", version=built_info::PKG_VERSION)]
 struct Opt {
     #[structopt(long, parse(from_os_str), default_value = "recipes")]
+    /// The directory that contains recipe yaml files.
     recipe_dir: PathBuf,
 
     #[structopt(long, parse(from_os_str), default_value = "templates")]
+    /// The directory that contains website template files.
     templates_dir: PathBuf,
 
     #[structopt(long, parse(from_os_str), default_value = "static")]
+    /// The directory that contains static assets like css, js, icons, etc.
     static_dir: PathBuf,
 
     #[structopt(long, parse(from_os_str), default_value = "public")]
+    /// The directory that contains static and generated content.
     public_dir: PathBuf,
 
     #[structopt(long, default_value = "en_US")]
     locales: Vec<String>,
 
-    #[structopt(long, default_value = "http://localhost:8080/")]
+    #[structopt(long, parse(try_from_str = parse_url), default_value = "http://localhost:8080/")]
+    /// The base URL for the generated site.
     public_url: String,
 
     #[structopt(subcommand)]
@@ -54,20 +82,25 @@ struct Opt {
 
 #[derive(StructOpt, Debug, Clone)]
 enum Command {
+    /// Build the website.
     Build {},
 
     #[cfg(feature = "server")]
+    /// Serve the generated website.
     Server {
         #[structopt(long, default_value = "0.0.0.0:8080")]
         listen: String,
     },
 
     #[cfg(feature = "validate")]
+    /// Validate recipe files.
     Validate {},
 
     #[cfg(feature = "convert")]
+    /// Create thumbnails for recipe images.
     Convert {},
 
+    /// Generate and stub a new recipe file.
     Init {
         #[structopt(long)]
         id: Option<Uuid>,
