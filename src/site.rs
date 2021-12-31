@@ -115,7 +115,10 @@ pub fn build_site(
                             recipe: localized_recipe.clone(),
                             site: site.clone(),
                             flat_steps: localized_recipe.flat_steps(),
-                            self_url: format!("{}{}/{}", site.public_url, site_locale, localized_recipe.slug),
+                            self_url: format!(
+                                "{}{}/{}",
+                                site.public_url, site_locale, localized_recipe.slug
+                            ),
                         },
                     )
                     .unwrap();
