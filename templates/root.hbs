@@ -6,8 +6,13 @@
   <meta name="description" content="An easy to navigate and human friendly recipe website.">
   <meta name="author" content="Nick Gerakines, Mattie Carter, humans.txt">
   <meta name="generator" content="jrb {{ site.version }}">
-  <base href="{{ site.public_url }}">
+
   <title>{{title}}</title>
+
+  <base href="{{ site.public_url }}">
+{{#if self_url ~}}
+  <link rel="canonical" href="{{ self_url }}" />
+{{/if ~}}
 
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -18,7 +23,7 @@
   <link href="/css/bootstrap.min.css" rel="stylesheet">
   <link href="/css/bootstrap-icons.css" rel="stylesheet">
   <link rel="author" href="/humans.txt" />
-  {{#if show_search }}
+{{#if show_search ~}}
   <style>
     .tt-menu {
       background-color: #FFFFFF;
@@ -45,13 +50,13 @@
       margin: 0;
     }
   </style>
-  {{/if}}
+{{/if ~}}
 </head>
 <body>
   <div class="container-fluid">
     <nav class="d-print-none navbar navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">JustRecipes.Blog</a>
+        <a class="navbar-brand" href="/{{#if site_section }}{{ site_section }}{{/if}}">JustRecipes.Blog</a>
         {{#if show_search }}
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search"

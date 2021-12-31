@@ -3,7 +3,6 @@
     {
       "@context": "https://schema.org",
       "@type": "Recipe",
-
       "name": "{{ escape recipe.name }}",      
 {{#if recipe.images }}
       "image": [
@@ -23,8 +22,8 @@
       ],
 {{/if}}
       "recipeInstructions": [
-{{#each flat_steps as |item| ~}}
-        {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape item ~}}"}
+{{#each flat_steps as |step| ~}}
+        {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape step ~}}", "url": "{{ ../site.public_url }}{{ ../locale }}/{{ ../recipe.slug}}#{{ fnv step }}"}
 {{/each ~}}
       ]
     }
@@ -137,4 +136,4 @@
 {{/with ~}}
 {{/if}}
 {{/inline}}
-{{> root show_search=true }}
+{{> root show_search=true site_section=locale }}

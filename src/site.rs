@@ -29,6 +29,7 @@ pub fn build_site(
     handlebars.register_helper("escape", Box::new(EscapeHelper));
     handlebars.register_helper("locale-helper", Box::new(LocaleHelper));
     handlebars.register_helper("fnv", Box::new(FNVHelper));
+    handlebars.register_script_helper_file("incr", templates_dir.join("incr.rhai"))?;
     handlebars
         .register_templates_directory(".hbs", templates_dir)
         .expect("cannot load templates");
@@ -114,6 +115,10 @@ pub fn build_site(
                             recipe: localized_recipe.clone(),
                             site: site.clone(),
                             flat_steps: localized_recipe.flat_steps(),
+                            self_url: format!(
+                                "{}{}/{}",
+                                site.public_url, site_locale, localized_recipe.slug
+                            ),
                         },
                     )
                     .unwrap();
@@ -156,6 +161,7 @@ pub fn build_site(
                     title: "Just Recipes - Home".to_string(),
                     recipes: recipes.clone(),
                     site: site.clone(),
+                    self_url: format!("{}{}", &site.public_url, &site_locale),
                 },
             )
             .expect("unable to render index");
@@ -181,6 +187,7 @@ pub fn build_site(
                 locales: site_locales.to_vec(),
                 title: "Just Recipes - Home".to_string(),
                 site: site.clone(),
+                self_url: site.public_url.clone(),
             },
         )
         .expect("unable to render index");
@@ -195,6 +202,7 @@ pub fn build_site(
                 locales: site_locales.to_vec(),
                 title: "Just Recipes Blog - About".to_string(),
                 site: site.clone(),
+                self_url: format!("{}about", &site.public_url),
             },
         )
         .expect("unable to render about");
