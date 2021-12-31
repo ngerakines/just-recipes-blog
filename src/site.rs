@@ -29,6 +29,7 @@ pub fn build_site(
     handlebars.register_helper("escape", Box::new(EscapeHelper));
     handlebars.register_helper("locale-helper", Box::new(LocaleHelper));
     handlebars.register_helper("fnv", Box::new(FNVHelper));
+    handlebars.register_script_helper_file("incr", templates_dir.join("incr.rhai"))?;
     handlebars
         .register_templates_directory(".hbs", templates_dir)
         .expect("cannot load templates");

@@ -1,4 +1,20 @@
 {{#*inline "page" }}
+<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+{{#each recipes as |recipe| ~}}
+        {{#if (gt @index 0) }},{{/if}}{
+          "@type": "ListItem",
+          "position": {{ incr @index }},
+          "url": "/{{ ../locale }}/{{ locale-helper recipe.slug ../locale }}"
+        }
+{{/each ~}}
+      ]
+    }
+    </script>
+
 <ul>
     {{#each recipes as |recipe| ~}}
     <li>
