@@ -7,7 +7,7 @@
 {{#if recipe.images }}
       "image": [
       {{#each recipe.images as |image| }}
-      {{#if (gt @index 0) }},{{/if}}"{{ ../site.public_url }}{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 1 }}"
+      {{#if (gt @index 0) }},{{/if}}"{{ url ../locale ../recipe.slug}}{{ lookup image 1 }}"
 {{/each}}
       ],
 {{/if}}
@@ -23,7 +23,7 @@
 {{/if}}
       "recipeInstructions": [
 {{#each flat_steps as |step| ~}}
-        {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape step ~}}", "url": "{{ ../site.public_url }}{{ ../locale }}/{{ ../recipe.slug}}#{{ fnv step }}"}
+        {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape step ~}}", "url": "{{ url ../locale ../recipe.slug}}#{{ fnv step }}"}
 {{/each ~}}
       ]
     }
@@ -51,8 +51,8 @@
 <div class="row pt-3 pb-3 d-print-none">
 {{#each recipe.images as |image| }}
     <div class="col">
-<a href="/{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 1 }}">
-<img src="/{{ ../locale }}/{{ ../recipe.slug}}/{{ lookup image 0 }}" class="img-thumbnail" alt="preview image of {{ escape ../recipe.name }}">
+<a href="{{ url ../locale ../recipe.slug}}{{ lookup image 1 }}">
+<img src="{{ url ../locale ../recipe.slug}}{{ lookup image 0 }}" class="img-thumbnail" alt="preview image of {{ escape ../recipe.name }}">
 </a>
 </div>
 {{/each}}
