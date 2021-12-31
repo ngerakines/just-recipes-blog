@@ -6,8 +6,13 @@
   <meta name="description" content="An easy to navigate and human friendly recipe website.">
   <meta name="author" content="Nick Gerakines, Mattie Carter, humans.txt">
   <meta name="generator" content="jrb {{ site.version }}">
-  <base href="{{ site.public_url }}">
+
   <title>{{title}}</title>
+
+  <base href="{{ site.public_url }}">
+{{#if self_url ~}}
+  <link rel="canonical" href="{{ self_url }}" />
+{{/if ~}}
 
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">

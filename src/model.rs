@@ -271,6 +271,7 @@ pub struct HomeView {
     pub locales: Vec<String>,
     pub title: String,
     pub site: SiteView,
+    pub self_url: String,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
@@ -279,6 +280,7 @@ pub struct IndexView {
     pub title: String,
     pub recipes: Vec<Recipe>,
     pub site: SiteView,
+    pub self_url: String,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
@@ -288,6 +290,7 @@ pub struct RecipeView {
     pub recipe: RecipePartial,
     pub site: SiteView,
     pub flat_steps: Vec<String>,
+    pub self_url: String,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
@@ -296,6 +299,7 @@ pub struct PageView {
     pub title: String,
     pub content: String,
     pub site: SiteView,
+    pub self_url: String,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
