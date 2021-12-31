@@ -9,7 +9,7 @@
 
   <title>{{title}}</title>
 
-  <base href="{{ site.public_url }}">
+  <base href="{{ url }}">
 {{#if self_url ~}}
   <link rel="canonical" href="{{ self_url }}" />
 {{/if ~}}
@@ -56,7 +56,7 @@
   <div class="container-fluid">
     <nav class="d-print-none navbar navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/{{#if site_section }}{{ site_section }}{{/if}}">JustRecipes.Blog</a>
+        <a class="navbar-brand" href="{{ url site_section }}">JustRecipes.Blog</a>
         {{#if show_search }}
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search"
@@ -73,7 +73,7 @@
       justrecipes.blog is made with <i class="bi bi-heart-fill" role="img" aria-label="love"></i> by Nick Gerakines and Mattie Carter
       <span class="d-print-none">
         &middot;
-        <a href="/about/" class="text-reset text-decoration-none"><i role="img" aria-label="About" class="bi bi-question-square-fill"></i></a>
+        <a href="{{ url "about" }}" class="text-reset text-decoration-none"><i role="img" aria-label="About" class="bi bi-question-square-fill"></i></a>
         &middot;
         <a href="https://twitter.com/justrecipesblog" class="text-reset text-decoration-none"><i  role="img" aria-label="Twitter" class="bi bi-twitter"></i></a>
         &middot;

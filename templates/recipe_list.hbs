@@ -8,7 +8,7 @@
         {{#if (gt @index 0) }},{{/if}}{
           "@type": "ListItem",
           "position": {{ incr @index }},
-          "url": "/{{ ../locale }}/{{ locale-helper recipe.slug ../locale }}"
+          "url": "{{ url ../locale (locale-helper recipe.slug ../locale) }}"
         }
 {{/each ~}}
       ]
@@ -18,7 +18,7 @@
 <ul>
     {{#each recipes as |recipe| ~}}
     <li>
-        {{>recipe_link locale=../locale}}
+        <a href="{{ url ../locale (locale-helper recipe.slug ../locale) }}">{{ locale-helper recipe.name locale }}</a>
     </li>
     {{/each ~}}
 </ul>

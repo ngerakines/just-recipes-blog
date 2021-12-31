@@ -2,12 +2,7 @@
 <div class="row">
   <div class="col">
     <p>Welcome to our blog of recipes. Please select your preferred language:</p>
-    <ul>{{#each locales as |locale| ~}}
-      <li>
-        <a href="/{{ locale }}">{{ locale }}</a>
-      </li>
-{{/each ~}}
-    </ul>
+    <ul>{{#each locales as |locale| ~}}<li><a href="{{ url locale }}">{{ locale }}</a></li>{{/each ~}}</ul>
   </div>
 </div>
 {{/inline}}

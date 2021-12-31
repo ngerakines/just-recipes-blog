@@ -1,4 +1,4 @@
-use handlebars::Handlebars;
+use handlebars::{Context, Handlebars, Helper, HelperResult, Output, RenderContext};
 use std::{collections::HashSet, fs, path::Path};
 
 use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
@@ -29,6 +29,30 @@ pub fn build_site(
     handlebars.register_helper("escape", Box::new(EscapeHelper));
     handlebars.register_helper("locale-helper", Box::new(LocaleHelper));
     handlebars.register_helper("fnv", Box::new(FNVHelper));
+    handlebars.register_helper(
+        "url",
+        Box::new(
+            |h: &Helper,
+             _: &Handlebars,
+             _: &Context,
+             _: &mut RenderContext,
+             out: &mut dyn Output|
+             -> HelperResult {
+                let joined: String = h
+                    .params()
+                    .iter()
+                    .map(|id| match id.value().as_str() {
+                        Some(value) => format!("{}/", value),
+                        None => "".to_string(),
+                    })
+                    .collect();
+                let combined = format!("{}{}", site.public_url, joined);
+                out.write(&combined)?;
+                Ok(())
+            },
+        ),
+    );
+
     handlebars.register_script_helper_file("incr", templates_dir.join("incr.rhai"))?;
     handlebars
         .register_templates_directory(".hbs", templates_dir)
@@ -104,7 +128,7 @@ pub fn build_site(
                 let localized_recipe =
                     recipe.to_partial(Some(locale.clone()), site_locales, images.clone())?;
 
-                sitemap_paths.push(format!("{}/{}", site_locale, slug_root));
+                sitemap_paths.push(format!("{}/{}/", site_locale, slug_root));
 
                 let recipe_html = handlebars
                     .render(
@@ -116,7 +140,7 @@ pub fn build_site(
                             site: site.clone(),
                             flat_steps: localized_recipe.flat_steps(),
                             self_url: format!(
-                                "{}{}/{}",
+                                "{}{}/{}/",
                                 site.public_url, site_locale, localized_recipe.slug
                             ),
                         },
@@ -145,7 +169,8 @@ pub fn build_site(
                 search_views.push(SearchView {
                     name: recipe.name.clone().localized(Some(locale.clone()))?,
                     link: format!(
-                        "/{}/{}",
+                        "{}{}/{}/",
+                        site.public_url,
                         site_locale,
                         recipe.slug.clone().localized(Some(site_locale.clone()))?
                     ),
@@ -161,7 +186,7 @@ pub fn build_site(
                     title: "Just Recipes - Home".to_string(),
                     recipes: recipes.clone(),
                     site: site.clone(),
-                    self_url: format!("{}{}", &site.public_url, &site_locale),
+                    self_url: format!("{}{}/", &site.public_url, &site_locale),
                 },
             )
             .expect("unable to render index");
@@ -202,7 +227,7 @@ pub fn build_site(
                 locales: site_locales.to_vec(),
                 title: "Just Recipes Blog - About".to_string(),
                 site: site.clone(),
-                self_url: format!("{}about", &site.public_url),
+                self_url: format!("{}about/", &site.public_url),
             },
         )
         .expect("unable to render about");
@@ -217,7 +242,7 @@ pub fn build_site(
             "sitemap",
             &SiteMapView {
                 paths: sitemap_paths,
-                site,
+                site: site.clone(),
             },
         )
         .expect("unable to render sitemap");
