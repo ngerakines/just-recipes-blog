@@ -10,6 +10,12 @@
       {{#if (gt @index 0) }},{{/if}}"{{ url ../locale ../recipe.slug}}{{ lookup image 1 }}"
 {{/each}}
       ],
+{{#if recipe.sd_cook_time ~}}
+    "cookTime": "{{ recipe.sd_cook_time }}",
+{{/if ~}}
+{{#if recipe.sd_prep_time ~}}
+    "prepTime": "{{ recipe.sd_prep_time }}",
+{{/if ~}}
 {{/if}}
 {{#if recipe.description }}
       "description": "{{ escape recipe.description }}",

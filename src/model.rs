@@ -3,12 +3,13 @@ use humantime::format_duration;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use serde::ser::{Serialize, Serializer};
 use serde::{Deserialize as DeserializeMacro, Serialize as SerializeMacro};
+use slugify::slugify;
 use std::collections::HashMap;
 use std::fmt;
 use std::time::Duration;
 use uuid::Uuid;
 
-use slugify::slugify;
+use crate::when::duration_iso8601;
 
 pub const US_ENGLISH: &str = "en_US";
 
@@ -89,6 +90,14 @@ impl Recipe {
             },
             total_time: match total_time.is_zero() {
                 false => Some(format_duration(total_time).to_string()),
+                true => None,
+            },
+            sd_cook_time: match cook_time.is_zero() {
+                false => Some(duration_iso8601(cook_time)),
+                true => None,
+            },
+            sd_prep_time: match prep_time.is_zero() {
+                false => Some(duration_iso8601(prep_time)),
                 true => None,
             },
             name: self.name.clone().localized(locale.clone())?,
@@ -226,6 +235,8 @@ pub struct RecipePartial {
     pub cook_time: Option<String>,
     pub prep_time: Option<String>,
     pub total_time: Option<String>,
+    pub sd_cook_time: Option<String>,
+    pub sd_prep_time: Option<String>,
     pub images: Vec<(String, String)>,
 }
 

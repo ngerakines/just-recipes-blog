@@ -9,6 +9,7 @@ extern crate slugify;
 pub mod model;
 pub mod site;
 pub mod template;
+pub mod when;
 
 #[cfg(feature = "validate")]
 pub mod validate;
