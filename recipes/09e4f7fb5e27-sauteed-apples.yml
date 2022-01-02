@@ -1,0 +1,21 @@
+---
+id: 9849f80c-f66d-4960-880d-09e4f7fb5e27
+locales: ["en_US"]
+name: Sauteed Apples
+slug: 09e4f7fb5e27-sauteed-apples
+description: A quick and sweet fruit topping.
+ingredients:
+  - 4 apples
+  - 1 tablespoon cinamon
+  - 1/2 teaspoon nutmeg
+  - 3 tablespoons brown sugar
+equipment:
+  - pan
+stages:
+  - name: Cook
+    cook_time: 5 minutes
+    prep_time: 10 minutes
+    steps:
+      - Peeled and cut apples into small-medium (1 to 2 inch) blocks
+      - Mix and cook ingredients over low-medium heat.
+    footer: A small amount of water, about a table spoon at a time, can be added to prevent mixture from drying out.
