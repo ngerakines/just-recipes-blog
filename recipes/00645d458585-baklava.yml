@@ -1,9 +1,12 @@
 id: 0a9feae5-5684-4e06-b4bb-00645d458585
 locales:
   - en_US
+published: 2021-12-27
 name: Baklava with walnuts and pistachios
 slug: 00645d458585-baklava-with-walnuts-and-pistachios
 description: A classic and delicious greek dessert.
+category: dessert
+cuisine: greek
 tags:
   - greek
   - dessert

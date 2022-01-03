@@ -135,41 +135,87 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 ", "missing field `locales` at line 2 column 3"),
         validate_recipe_err_missing_name: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
+published: 2022-01-01
 locales: []", "missing field `name` at line 2 column 3"),
         validate_recipe_err_missing_slug: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
+published: 2022-01-01
 name: wonderful food", "missing field `slug` at line 2 column 3"),
+
+
+        validate_recipe_err_missing_published: ("---
+id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
+locales: []
+name: wonderful food
+category: dinner
+cuisine: american
+slug: 02e3f381de4e-wonderful-food", "missing field `published` at line 2 column 3"),
+
         validate_recipe_err_missing_ingredients: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
+published: 2022-01-01
 name: wonderful food
+category: dinner
+cuisine: american
 slug: 02e3f381de4e-wonderful-food", "missing field `ingredients` at line 2 column 3"),
+
+        validate_recipe_err_missing_category: ("---
+id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
+locales: []
+published: 2022-01-01
+name: wonderful food
+slug: 02e3f381de4e-wonderful-food
+ingredients: []", "missing field `category` at line 2 column 3"),
+
+        validate_recipe_err_missing_cuisine: ("---
+id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
+locales: []
+published: 2022-01-01
+name: wonderful food
+slug: 02e3f381de4e-wonderful-food
+category: dinner
+ingredients: []", "missing field `cuisine` at line 2 column 3"),
+
         validate_recipe_err_missing_equipment: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
+published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
+category: dinner
+cuisine: american
 ingredients: []", "missing field `equipment` at line 2 column 3"),
+
         validate_recipe_err_missing_stages: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
+published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
 ingredients: []
+category: dinner
+cuisine: american
 equipment: []", "missing field `stages` at line 2 column 3"),
         validate_recipe_err_empty_locales: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
+published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
+category: dinner
+cuisine: american
 ingredients: []
 equipment: []
 stages: []", "locales cannot be empty"),
         validate_recipe_err_empty_ingredients: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
+category: dinner
+cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: []
 equipment: []
@@ -177,7 +223,10 @@ stages: []", "ingredients cannot be empty"),
         validate_recipe_err_empty_stages: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
+category: dinner
+cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
 equipment: []
@@ -185,16 +234,22 @@ stages: []", "stages cannot be empty"),
         validate_recipe_err_missing_steps: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
+category: dinner
+cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
 equipment: []
 stages:
-- name: prep", "stages[0]: missing field `steps` at line 9 column 7"),
+- name: prep", "stages[0]: missing field `steps` at line 12 column 7"),
         validate_recipe_err_empty_steps: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
+category: dinner
+cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
 equipment: []
@@ -204,9 +259,12 @@ stages:
         validate_recipe_err_name_locale: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name:
   en_GB: wonderful food
 slug: 02e3f381de4e-wonderful-food
+category: dinner
+cuisine: american
 ingredients: [food_a]
 equipment: []
 stages:
@@ -216,8 +274,11 @@ stages:
         validate_recipe_err_stage_step_locale: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
+category: dinner
+cuisine: american
 ingredients: [food_a]
 equipment: []
 stages:
@@ -228,8 +289,11 @@ stages:
         validate_recipe_err_stage_invalid_duration: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
+published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
+category: dinner
+cuisine: american
 ingredients: [food_a]
 equipment: []
 stages:
@@ -237,16 +301,6 @@ stages:
   cook_time: invalid
   steps:
   - first
-", "stages[0].cook_time: invalid value: string \"invalid\", expected a duration at line 10 column 14"),
+", "stages[0].cook_time: invalid value: string \"invalid\", expected a duration at line 13 column 14"),
     }
-
-    // #[test]
-    // fn validate_recipe_ok() {
-    //     let res = validate_recipe("---");
-    //     assert!(res.is_err());
-    //     assert_eq!(
-    //         res.unwrap_err().to_string(),
-    //         "invalid type: unit value, expected struct Recipe at line 2 column 1"
-    //     );
-    // }
 }

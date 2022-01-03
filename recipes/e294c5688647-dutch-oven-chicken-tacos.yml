@@ -1,8 +1,13 @@
 ---
 id: 6d15fe48-155b-4fe6-ad1e-e294c5688647
 locales: ["en_US"]
+published: 2021-12-27
 name: Dutch Oven Chicken Tacos
 slug: e294c5688647-dutch-oven-chicken-tacos
+category: dinner
+cuisine: mexican
+keywords:
+  - meal prep
 ingredients:
   - 3 tablespoons of unsalted butter
   - 4 garlic cloves
