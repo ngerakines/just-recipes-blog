@@ -88,7 +88,7 @@
 {{#if recipe.ingredients}}
 <div>
     <h1>Ingredients</h1>
-    <ul class="list-unstyled">
+    <ul>
         {{#each recipe.ingredients as |item| ~}}
         <li class="jump ingredient" id="{{ fnv item }}">
             {{~ item ~}}
@@ -101,7 +101,7 @@
 {{#if recipe.equipment }}
 <div>
     <h1>Equipment</h1>
-    <ul class="list-unstyled">
+    <ul>
         {{#each recipe.equipment as |item| ~}}
         <li class="jump ingredient" id="{{ fnv item }}">
             {{~ item ~}}
