@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ locale }}">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,9 +11,9 @@
   <title>{{title}}</title>
 
   <base href="{{ url }}">
-{{#if self_url ~}}
+  {{#if self_url ~}}
   <link rel="canonical" href="{{ self_url }}" />
-{{/if ~}}
+  {{/if ~}}
 
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -23,7 +24,7 @@
   <link href="/css/bootstrap.min.css" rel="stylesheet">
   <link href="/css/bootstrap-icons.css" rel="stylesheet">
   <link rel="author" href="/humans.txt" />
-{{#if show_search ~}}
+  {{#if show_search ~}}
   <style>
     .tt-menu {
       background-color: #FFFFFF;
@@ -50,34 +51,53 @@
       margin: 0;
     }
   </style>
-{{/if ~}}
+  {{/if ~}}
 </head>
+
 <body>
   <div class="container-fluid">
-    <nav class="d-print-none navbar navbar-light bg-light">
+    <nav class="d-print-none navbar navbar-expand-md navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="{{ url site_section }}">JustRecipes.Blog</a>
-        {{#if show_search }}
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search"
-            autocomplete="off" spellcheck="false">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-        {{/if}}
+        {{#if show_nav ~}}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="/{{ locale }}/categories/">Categories</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/{{ locale }}/cuiscines/">Cuisines</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="search"
+              autocomplete="off" spellcheck="false">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+        {{/if ~}}
       </div>
     </nav>
     <main class="pt-4">
       {{> page}}
     </main>
     <footer class="border-top text-muted">
-      justrecipes.blog is made with <i class="bi bi-heart-fill" role="img" aria-label="love"></i> by Nick Gerakines and Mattie Carter
+      justrecipes.blog is made with <i class="bi bi-heart-fill" role="img" aria-label="love"></i> by Nick Gerakines and
+      Mattie Carter
       <span class="d-print-none">
         &middot;
-        <a href="{{ url "about" }}" class="text-reset text-decoration-none"><i role="img" aria-label="About" class="bi bi-question-square-fill"></i></a>
+        <a href="{{ url " about" }}" class="text-reset text-decoration-none"><i role="img" aria-label="About"
+            class="bi bi-question-square-fill"></i></a>
         &middot;
-        <a href="https://twitter.com/justrecipesblog" class="text-reset text-decoration-none"><i  role="img" aria-label="Twitter" class="bi bi-twitter"></i></a>
+        <a href="https://twitter.com/justrecipesblog" class="text-reset text-decoration-none"><i role="img"
+            aria-label="Twitter" class="bi bi-twitter"></i></a>
         &middot;
-        <a href="https://github.com/ngerakines/just-recipes-blog" class="text-reset text-decoration-none"><i role="img" aria-label="GitHub" class="bi bi-github"></i></a>
+        <a href="https://github.com/ngerakines/just-recipes-blog" class="text-reset text-decoration-none"><i role="img"
+            aria-label="GitHub" class="bi bi-github"></i></a>
       </span>
     </footer>
   </div>
@@ -127,4 +147,5 @@
   </script>
   {{/if}}
 </body>
+
 </html>
