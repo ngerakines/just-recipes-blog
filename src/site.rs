@@ -395,6 +395,7 @@ fn write_indexes(
     Ok(())
 }
 
+/// Title case a string.
 fn title(s: &str) -> String {
     let mut c = s.chars();
     match c.next() {
