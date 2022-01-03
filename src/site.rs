@@ -190,18 +190,12 @@ pub fn build_site(
                         String::from("og:site_name"),
                         String::from("Just Recipes Blog"),
                     ),
-                    (
-                        String::from("twitter:label1"),
-                        String::from("Cuisine"),
-                    ),
+                    (String::from("twitter:label1"), String::from("Cuisine")),
                     (
                         String::from("twitter:data1"),
                         localized_recipe.cuisine.clone(),
                     ),
-                    (
-                        String::from("twitter:label2"),
-                        String::from("Category"),
-                    ),
+                    (String::from("twitter:label2"), String::from("Category")),
                     (
                         String::from("twitter:data2"),
                         localized_recipe.category.clone(),
