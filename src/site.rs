@@ -8,7 +8,10 @@ use std::{
 };
 use url::Url;
 
-use crate::model::{HomeView, LinkListView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
+use crate::model::{
+    HomeView, LinkListView, OembedJsonView, OembedView, Recipe, RecipePartial, RecipeView,
+    SearchView, SiteMapView, SiteView,
+};
 use crate::template::{EscapeHelper, FNVHelper, LocaleHelper};
 
 pub fn build_site(
@@ -147,42 +150,73 @@ pub fn build_site(
                 let localized_recipe =
                     recipe.to_partial(Some(locale.clone()), site_locales, images.clone())?;
 
-                let self_url = format!(
-                    "{}{}/{}/",
-                    site.public_url, site_locale, localized_recipe.slug
-                );
-                site_links.insert(self_url.clone());
+                let self_url = Url::parse(&site.public_url)?
+                    .join(&format!("{}/", site_locale))?
+                    .join(&format!("{}/", slug_root))?;
 
-                recipe_links.push((self_url.clone(), localized_recipe.name.clone()));
+                site_links.insert(self_url.to_string());
+
+                recipe_links.push((self_url.to_string(), localized_recipe.name.clone()));
 
                 if let Some(x) = categorized_recipes.get_mut(&localized_recipe.category) {
-                    x.push((
-                        String::from(&self_url),
-                        String::from(&localized_recipe.name),
-                    ));
+                    x.push((self_url.to_string(), String::from(&localized_recipe.name)));
                 } else {
                     categorized_recipes.insert(
                         localized_recipe.category.clone(),
-                        vec![(
-                            String::from(&self_url),
-                            String::from(&localized_recipe.name),
-                        )],
+                        vec![(self_url.to_string(), String::from(&localized_recipe.name))],
                     );
                 }
 
                 if let Some(x) = cuisine_recipes.get_mut(&localized_recipe.cuisine) {
-                    x.push((
-                        String::from(&self_url),
-                        String::from(&localized_recipe.name),
-                    ));
+                    x.push((self_url.to_string(), String::from(&localized_recipe.name)));
                 } else {
                     cuisine_recipes.insert(
                         localized_recipe.cuisine.clone(),
-                        vec![(
-                            String::from(&self_url),
-                            String::from(&localized_recipe.name),
-                        )],
+                        vec![(self_url.to_string(), String::from(&localized_recipe.name))],
                     );
+                }
+
+                let mut recipe_meta = vec![
+                    (String::from("twitter:card"), String::from("summary")),
+                    (
+                        String::from("twitter:site"),
+                        String::from("@justrecipesblog"),
+                    ),
+                    (String::from("og:url"), self_url.to_string()),
+                    (String::from("twitter:url"), self_url.to_string()),
+                    (String::from("og:title"), localized_recipe.name.clone()),
+                    (String::from("og:locale"), site_locale.to_string()),
+                    (
+                        String::from("og:site_name"),
+                        String::from("Just Recipes Blog"),
+                    ),
+                    (String::from("twitter:label1"), String::from("Cuisine")),
+                    (
+                        String::from("twitter:data1"),
+                        localized_recipe.cuisine.clone(),
+                    ),
+                    (String::from("twitter:label2"), String::from("Category")),
+                    (
+                        String::from("twitter:data2"),
+                        localized_recipe.category.clone(),
+                    ),
+                ];
+                if localized_recipe.description.is_some() {
+                    recipe_meta.push((
+                        String::from("og:description"),
+                        localized_recipe.description.clone().unwrap().clone(),
+                    ))
+                }
+                if has_images {
+                    recipe_meta.push((
+                        String::from("og:image"),
+                        self_url
+                            .join(&format!("{}_thumbnail.jpg", recipe.id))?
+                            .to_string(),
+                    ));
+                    recipe_meta.push((String::from("og:image:type"), String::from("image/jpeg")));
+                    recipe_meta.push((String::from("og:image:width"), String::from("200")));
+                    recipe_meta.push((String::from("og:image:height "), String::from("200")));
                 }
 
                 let recipe_html = handlebars
@@ -194,7 +228,9 @@ pub fn build_site(
                             recipe: localized_recipe.clone(),
                             site: site.clone(),
                             flat_steps: localized_recipe.flat_steps(),
-                            self_url: self_url.clone(),
+                            self_url: self_url.to_string(),
+                            meta: recipe_meta,
+                            oembed_url: self_url.join("oembed.json")?.to_string(),
                         },
                     )
                     .unwrap();
@@ -227,6 +263,16 @@ pub fn build_site(
                         recipe.slug.clone().localized(Some(site_locale.clone()))?
                     ),
                 });
+
+                write_oembed(
+                    &handlebars,
+                    &recipe_root,
+                    self_url,
+                    &localized_recipe,
+                    site.clone(),
+                    site_locale,
+                    has_images,
+                )?;
             }
         }
 
@@ -392,6 +438,61 @@ fn write_indexes(
 
     let index_destination = Path::new(&base_dir).join("index.html");
     fs::write(&index_destination, index_html)?;
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)]
+fn write_oembed(
+    handlebars: &Handlebars,
+    base_dir: &Path,
+    base_url: Url,
+    recipe: &RecipePartial,
+    site: SiteView,
+    locale: &str,
+    has_images: bool,
+) -> Result<(), anyhow::Error> {
+    let oembed_html = handlebars.render(
+        "oembed",
+        &OembedView {
+            locale: locale.to_string(),
+            title: recipe.name.clone(),
+            recipe: recipe.clone(),
+            site,
+            recipe_url: base_url.to_string(),
+            image_url: match has_images {
+                false => None,
+                true => Some(
+                    base_url
+                        .join(&format!("{}_thumbnail.jpg", recipe.id))?
+                        .to_string(),
+                ),
+            },
+        },
+    )?;
+
+    let html_destination = Path::new(&base_dir).join("oembed.html");
+    fs::write(&html_destination, oembed_html)?;
+
+    let oembed_json = serde_json::to_string(&OembedJsonView{
+        response_type: String::from("rich"),
+        version: String::from("1.0"),
+        title: Some(String::from("A recipe")),
+        author_name: Some(String::from("Anonymous")),
+        author_url: Some(String::from("https://justrecipes.blog/")),
+        provider_name: Some(String::from("Just Recipes Blog")),
+        provider_url: Some(String::from("https://justrecipes.blog/")),
+        html: format!("<iframe width=\"100%\" height=\"270\" scrolling=\"no\" frameborder=\"no\" src=\"{}\"></iframe>", base_url.join("oembed.html")?.to_string()),
+        width: Some(550),
+        height: Some(270),
+        cache_age: Some(String::from("3153600000")),
+        thumbnail_url: Some(String::from("3153600000")),
+        thumbnail_width: Some(200),
+        thumbnail_height: Some(200),
+    })?;
+
+    let json_destination = Path::new(&base_dir).join("oembed.json");
+    fs::write(&json_destination, oembed_json)?;
+
     Ok(())
 }
 

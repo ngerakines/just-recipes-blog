@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="{{ locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An easy to navigate and human friendly recipe website.">
+    <meta name="author" content="Nick Gerakines, Mattie Carter, humans.txt">
+    <meta name="generator" content="jrb {{ site.version }}">
+    <title>{{ title }}</title>
+    <base href="{{ url }}">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/site.json">
+    <link rel="icon" href="/favicon.ico">
+    <link href="{{ url }}css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card mt-2" style="max-width: 540px;">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{{ image_url }}" class="card-img" alt="image preview of recipe">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ recipe.cuisine }} | {{ recipe.category }}
+                        </h6>
+                        {{#if recipe.description }}
+                        <p class="card-text">{{ recipe.description }}</p>
+                        {{/if}}
+                        <p class="card-text"><a href="{{ recipe_url }}" class="card-link">More</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

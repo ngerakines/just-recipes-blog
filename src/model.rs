@@ -349,6 +349,8 @@ pub struct RecipeView {
     pub site: SiteView,
     pub flat_steps: Vec<String>,
     pub self_url: String,
+    pub oembed_url: String,
+    pub meta: Vec<(String, String)>,
 }
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
@@ -487,4 +489,32 @@ pub fn localied_vec(
     }
 
     Ok(results)
+}
+
+#[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
+pub struct OembedView {
+    pub locale: String,
+    pub title: String,
+    pub recipe: RecipePartial,
+    pub site: SiteView,
+    pub recipe_url: String,
+    pub image_url: Option<String>,
+}
+
+#[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
+pub struct OembedJsonView {
+    pub response_type: String,
+    pub version: String,
+    pub title: Option<String>,
+    pub author_name: Option<String>,
+    pub author_url: Option<String>,
+    pub provider_name: Option<String>,
+    pub provider_url: Option<String>,
+    pub cache_age: Option<String>,
+    pub thumbnail_url: Option<String>,
+    pub thumbnail_width: Option<i32>,
+    pub thumbnail_height: Option<i32>,
+    pub html: String,
+    pub width: Option<i32>,
+    pub height: Option<i32>,
 }
