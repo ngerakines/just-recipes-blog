@@ -260,7 +260,7 @@ pub fn build_site(
         write_indexes(
             &handlebars,
             &Path::new(&locale_root).join("categories"),
-            Url::parse(&site.public_url)?.join("categories")?,
+            Url::parse(&site.public_url)?.join(&format!("{}/", site_locale))?.join("categories/")?,
             String::from("categories"),
             site.clone(),
             site_locale,
@@ -270,7 +270,7 @@ pub fn build_site(
         write_indexes(
             &handlebars,
             &Path::new(&locale_root).join("cuisines"),
-            Url::parse(&site.public_url)?.join("cuisines")?,
+            Url::parse(&site.public_url)?.join(&format!("{}/", site_locale))?.join("cuisines/")?,
             String::from("cuisines"),
             site.clone(),
             site_locale,
@@ -344,7 +344,7 @@ fn write_indexes(
 
     for group in grouped_recipes.keys().sorted() {
         let group_slug: String = slugify!(group);
-        let self_url = base_url.join(&group_slug)?;
+        let self_url = base_url.join(&format!("{}/", &group_slug))?;
 
         group_links.push((self_url.to_string(), group.clone()));
 
