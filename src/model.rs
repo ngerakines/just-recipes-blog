@@ -368,7 +368,7 @@ pub struct SearchView {
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct SiteMapView {
-    pub paths: Vec<String>,
+    pub links: Vec<String>,
     pub site: SiteView,
 }
 

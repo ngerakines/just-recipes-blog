@@ -75,7 +75,8 @@ pub fn build_site(
     let mut recipes: Vec<Recipe> = Vec::with_capacity(recipe_files.len());
     let mut recipe_ids: HashSet<String> = HashSet::new();
 
-    let mut sitemap_paths: Vec<String> = vec!["about".to_string()];
+    let mut site_links: HashSet<String> = HashSet::new();
+    site_links.insert(site.public_url.clone());
 
     for recipe_file in &recipe_files {
         let recipe_yaml = fs::read_to_string(&recipe_file)?;
@@ -101,7 +102,7 @@ pub fn build_site(
 
         let mut search_views: Vec<SearchView> = Vec::with_capacity(recipe_files.len());
 
-        sitemap_paths.push(site_locale.to_string());
+        site_links.insert(format!("{}{}/", site.public_url, site_locale));
 
         let mut categorized_recipes: HashMap<String, Vec<(String, String)>> = HashMap::new();
         let mut cuisine_recipes: HashMap<String, Vec<(String, String)>> = HashMap::new();
@@ -150,10 +151,9 @@ pub fn build_site(
                     "{}{}/{}/",
                     site.public_url, site_locale, localized_recipe.slug
                 );
+                site_links.insert(self_url.clone());
 
                 recipe_links.push((self_url.clone(), localized_recipe.name.clone()));
-
-                sitemap_paths.push(format!("{}/{}/", site_locale, slug_root));
 
                 if let Some(x) = categorized_recipes.get_mut(&localized_recipe.category) {
                     x.push((
@@ -267,6 +267,7 @@ pub fn build_site(
             site.clone(),
             site_locale,
             categorized_recipes,
+            &mut site_links,
         )?;
 
         write_indexes(
@@ -279,6 +280,7 @@ pub fn build_site(
             site.clone(),
             site_locale,
             cuisine_recipes,
+            &mut site_links,
         )?;
     }
 
@@ -318,7 +320,7 @@ pub fn build_site(
         .render(
             "sitemap",
             &SiteMapView {
-                paths: sitemap_paths,
+                links: site_links.into_iter().collect(),
                 site: site.clone(),
             },
         )
@@ -335,6 +337,7 @@ pub fn build_site(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn write_indexes(
     handlebars: &Handlebars,
     base_dir: &Path,
@@ -343,6 +346,7 @@ fn write_indexes(
     site: SiteView,
     locale: &str,
     grouped_recipes: HashMap<String, Vec<(String, String)>>,
+    site_links: &mut HashSet<String>,
 ) -> Result<(), anyhow::Error> {
     let mut group_links: Vec<(String, String)> = Vec::new();
 
@@ -351,6 +355,7 @@ fn write_indexes(
         let self_url = base_url.join(&format!("{}/", &group_slug))?;
 
         group_links.push((self_url.to_string(), group.clone()));
+        site_links.insert(self_url.to_string());
 
         if let Some(links) = grouped_recipes.get(group) {
             let html = handlebars.render(
@@ -370,6 +375,8 @@ fn write_indexes(
             fs::write(&destination, html)?;
         }
     }
+
+    site_links.insert(base_url.to_string());
 
     let index_html = handlebars.render(
         "link_list",
