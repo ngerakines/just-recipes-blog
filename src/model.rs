@@ -13,6 +13,22 @@ use crate::when::duration_iso8601;
 
 pub const US_ENGLISH: &str = "en_US";
 
+pub const CATEGORIES: &[&str; 13] = &[
+    "breakfast",
+    "lunch",
+    "beverage",
+    "cocktail",
+    "appetizer",
+    "soup",
+    "salad",
+    "main dish",
+    "side dish",
+    "dessert",
+    "break",
+    "holiday",
+    "entertaining",
+];
+
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct Recipe {
     pub id: Uuid,
@@ -352,8 +368,18 @@ pub struct SearchView {
 
 #[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct SiteMapView {
-    pub paths: Vec<String>,
+    pub links: Vec<String>,
     pub site: SiteView,
+}
+
+#[derive(Debug, PartialEq, SerializeMacro, DeserializeMacro)]
+pub struct LinkListView {
+    pub locale: String,
+    pub title: String,
+    pub links_label: String,
+    pub links: Vec<(String, String)>,
+    pub site: SiteView,
+    pub self_url: String,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]

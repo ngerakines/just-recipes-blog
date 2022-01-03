@@ -1,0 +1,17 @@
+{{#*inline "page" }}
+<div class="row">
+  <div class="col">
+    <h1>{{ links_label }}</h1>
+    {{#if preface ~}}<p class="lead">{{~ preface ~}}</p>{{/if ~}}
+    <ul>
+      {{#each links as |link| ~}}
+      <li>
+        <a href="{{~ lookup link 0 ~}}">{{~ lookup link 1 ~}}</a>
+      </li>
+      {{/each ~}}
+    </ul>
+    {{#if appendix ~}}<p>{{~ appendix ~}}</p>{{/if ~}}
+  </div>
+</div>
+{{/inline}}
+{{> root show_nav=true show_search=true site_section=locale }}

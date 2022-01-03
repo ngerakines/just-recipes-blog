@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>{{ site.public_url }}</loc></url>
-{{#each paths as |path| }}
-<url><loc>{{ ../site.public_url }}{{ path }}</loc></url>
+{{#each links as |link| }}
+<url><loc>{{ link }}</loc></url>
 {{/each}}
 </urlset>

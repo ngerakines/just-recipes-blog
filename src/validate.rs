@@ -2,7 +2,7 @@ use anyhow::{anyhow, Result};
 use std::{collections::HashSet, fs, path::Path};
 use uuid::Uuid;
 
-use crate::model::{LocalizedString, Recipe, US_ENGLISH};
+use crate::model::{LocalizedString, Recipe, CATEGORIES, US_ENGLISH};
 
 #[cfg(feature = "validate")]
 pub fn validate_recipes(recipe_dir: &Path) -> Result<(), anyhow::Error> {
@@ -49,6 +49,10 @@ pub fn validate_recipe(recipe_file_name: &str, recipe_yaml: &str) -> Result<(Uui
     }
     if deserialized_recipe.ingredients.is_empty() {
         return Err(anyhow!("ingredients cannot be empty"));
+    }
+
+    if !CATEGORIES.contains(&deserialized_recipe.category.localized(None)?.as_str()) {
+        return Err(anyhow!("invalid category"));
     }
 
     validate_localized_string("name", &deserialized_recipe.name)?;
@@ -161,7 +165,7 @@ name: wonderful food", "missing field `slug` at line 2 column 3"),
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food", "missing field `published` at line 2 column 3"),
 
@@ -170,7 +174,7 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food", "missing field `ingredients` at line 2 column 3"),
 
@@ -188,7 +192,7 @@ locales: []
 published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
-category: dinner
+category: main dish
 ingredients: []", "missing field `cuisine` at line 2 column 3"),
 
     //         validate_recipe_err_missing_equipment: ("---
@@ -197,7 +201,7 @@ ingredients: []", "missing field `cuisine` at line 2 column 3"),
     // published: 2022-01-01
     // name: wonderful food
     // slug: 02e3f381de4e-wonderful-food
-    // category: dinner
+    // category: main dish
     // cuisine: american
     // ingredients: []", "missing field `equipment` at line 2 column 3"),
 
@@ -208,7 +212,7 @@ published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
 ingredients: []
-category: dinner
+category: main dish
 cuisine: american
 equipment: []", "missing field `stages` at line 2 column 3"),
             validate_recipe_err_empty_locales: ("---
@@ -217,7 +221,7 @@ locales: []
 published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
-category: dinner
+category: main dish
 cuisine: american
 ingredients: []
 equipment: []
@@ -227,7 +231,7 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: []
@@ -238,7 +242,7 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
@@ -249,7 +253,7 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
@@ -261,7 +265,7 @@ id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
 name: wonderful food
-category: dinner
+category: main dish
 cuisine: american
 slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
@@ -276,7 +280,7 @@ published: 2022-01-01
 name:
   en_GB: wonderful food
 slug: 02e3f381de4e-wonderful-food
-category: dinner
+category: main dish
 cuisine: american
 ingredients: [food_a]
 equipment: []
@@ -290,7 +294,7 @@ locales: [en_US]
 published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
-category: dinner
+category: main dish
 cuisine: american
 ingredients: [food_a]
 equipment: []
@@ -305,7 +309,7 @@ locales: [en_US]
 published: 2022-01-01
 name: wonderful food
 slug: 02e3f381de4e-wonderful-food
-category: dinner
+category: main dish
 cuisine: american
 ingredients: [food_a]
 equipment: []
