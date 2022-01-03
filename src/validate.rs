@@ -51,6 +51,8 @@ pub fn validate_recipe(recipe_file_name: &str, recipe_yaml: &str) -> Result<(Uui
         return Err(anyhow!("ingredients cannot be empty"));
     }
 
+    let categories = vec!["breakfast", "lunch", "beverage", "cocktail", "appetizer", "soup", "salad", "main dish", "side dish", "dessert", "break", "holiday", "entertaining"];
+
     validate_localized_string("name", &deserialized_recipe.name)?;
     validate_localized_string("slug", &deserialized_recipe.slug)?;
     validate_optional_localized_string("description", deserialized_recipe.description)?;
