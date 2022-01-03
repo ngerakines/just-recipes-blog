@@ -26,7 +26,7 @@ pub struct Recipe {
     pub description: Option<LocalizedString>,
     pub keywords: Option<Vec<LocalizedString>>,
     pub ingredients: Vec<LocalizedString>,
-    pub equipment: Vec<LocalizedString>,
+    pub equipment: Option<Vec<LocalizedString>>,
     pub stages: Vec<Stage>,
 }
 
@@ -126,7 +126,10 @@ impl Recipe {
                     .collect(),
             },
             ingredients: localied_vec(&self.ingredients, locale.clone())?,
-            equipment: localied_vec(&self.equipment, locale.clone())?,
+            equipment: match &self.equipment {
+                None => Vec::new(),
+                Some(equipment) => localied_vec(equipment, locale.clone())?,
+            },
             stages: self
                 .stages
                 .clone()
@@ -192,7 +195,7 @@ impl Recipe {
             description,
 
             ingredients,
-            equipment,
+            equipment: Some(equipment),
             stages,
         }
     }
