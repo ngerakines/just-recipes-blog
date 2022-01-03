@@ -8,12 +8,22 @@
   <meta name="author" content="Nick Gerakines, Mattie Carter, humans.txt">
   <meta name="generator" content="jrb {{ site.version }}">
 
+{{#if meta ~}}
+{{#each meta as |content| ~}}
+<meta name="{{~ lookup content 0 ~}}" content="{{~ lookup content 1 ~}}" />
+{{/each ~}}
+{{/if ~}}
+
   <title>{{title}}</title>
 
   <base href="{{ url }}">
-  {{#if self_url ~}}
+{{#if self_url ~}}
   <link rel="canonical" href="{{ self_url }}" />
-  {{/if ~}}
+{{/if ~}}
+
+{{#if oembed_url }}
+  <link rel="alternate" type="application/json+oembed" href="{{ oembed_url }}" title="{{ escape title }}" />
+{{/if ~}}
 
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
