@@ -57,7 +57,7 @@ pub fn validate_recipe(recipe_file_name: &str, recipe_yaml: &str) -> Result<(Uui
     validate_localized_string("slug", &deserialized_recipe.slug)?;
     validate_optional_localized_string("description", deserialized_recipe.description)?;
     validate_localized_strings("ingredients", deserialized_recipe.ingredients)?;
-    validate_localized_strings("equipment", deserialized_recipe.equipment)?;
+    validate_optional_localized_strings("equipment", deserialized_recipe.equipment)?;
 
     if deserialized_recipe.stages.is_empty() {
         return Err(anyhow!("stages cannot be empty"));
@@ -112,6 +112,19 @@ pub fn validate_optional_localized_string(key: &str, value: Option<LocalizedStri
     Ok(())
 }
 
+#[cfg(feature = "validate")]
+pub fn validate_optional_localized_strings(
+    key: &str,
+    values: Option<Vec<LocalizedString>>,
+) -> Result<()> {
+    if values.is_some() {
+        for value in values.unwrap() {
+            validate_localized_string(key, &value)?;
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -131,22 +144,22 @@ mod tests {
     }
 
     validate_recipe_parse_tests! {
-        validate_recipe_err_missing_id: ("---", "invalid type: unit value, expected struct Recipe at line 2 column 1"),
-        validate_recipe_err_missing_locales: ("---
+            validate_recipe_err_missing_id: ("---", "invalid type: unit value, expected struct Recipe at line 2 column 1"),
+            validate_recipe_err_missing_locales: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 ", "missing field `locales` at line 2 column 3"),
-        validate_recipe_err_missing_name: ("---
+            validate_recipe_err_missing_name: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 published: 2022-01-01
 locales: []", "missing field `name` at line 2 column 3"),
-        validate_recipe_err_missing_slug: ("---
+            validate_recipe_err_missing_slug: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
 name: wonderful food", "missing field `slug` at line 2 column 3"),
 
 
-        validate_recipe_err_missing_published: ("---
+            validate_recipe_err_missing_published: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 name: wonderful food
@@ -154,7 +167,7 @@ category: dinner
 cuisine: american
 slug: 02e3f381de4e-wonderful-food", "missing field `published` at line 2 column 3"),
 
-        validate_recipe_err_missing_ingredients: ("---
+            validate_recipe_err_missing_ingredients: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
@@ -163,7 +176,7 @@ category: dinner
 cuisine: american
 slug: 02e3f381de4e-wonderful-food", "missing field `ingredients` at line 2 column 3"),
 
-        validate_recipe_err_missing_category: ("---
+            validate_recipe_err_missing_category: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
@@ -171,7 +184,7 @@ name: wonderful food
 slug: 02e3f381de4e-wonderful-food
 ingredients: []", "missing field `category` at line 2 column 3"),
 
-        validate_recipe_err_missing_cuisine: ("---
+            validate_recipe_err_missing_cuisine: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
@@ -180,17 +193,17 @@ slug: 02e3f381de4e-wonderful-food
 category: dinner
 ingredients: []", "missing field `cuisine` at line 2 column 3"),
 
-        validate_recipe_err_missing_equipment: ("---
-id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
-locales: []
-published: 2022-01-01
-name: wonderful food
-slug: 02e3f381de4e-wonderful-food
-category: dinner
-cuisine: american
-ingredients: []", "missing field `equipment` at line 2 column 3"),
+    //         validate_recipe_err_missing_equipment: ("---
+    // id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
+    // locales: []
+    // published: 2022-01-01
+    // name: wonderful food
+    // slug: 02e3f381de4e-wonderful-food
+    // category: dinner
+    // cuisine: american
+    // ingredients: []", "missing field `equipment` at line 2 column 3"),
 
-        validate_recipe_err_missing_stages: ("---
+            validate_recipe_err_missing_stages: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
@@ -200,7 +213,7 @@ ingredients: []
 category: dinner
 cuisine: american
 equipment: []", "missing field `stages` at line 2 column 3"),
-        validate_recipe_err_empty_locales: ("---
+            validate_recipe_err_empty_locales: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: []
 published: 2022-01-01
@@ -211,7 +224,7 @@ cuisine: american
 ingredients: []
 equipment: []
 stages: []", "locales cannot be empty"),
-        validate_recipe_err_empty_ingredients: ("---
+            validate_recipe_err_empty_ingredients: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -222,7 +235,7 @@ slug: 02e3f381de4e-wonderful-food
 ingredients: []
 equipment: []
 stages: []", "ingredients cannot be empty"),
-        validate_recipe_err_empty_stages: ("---
+            validate_recipe_err_empty_stages: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -233,7 +246,7 @@ slug: 02e3f381de4e-wonderful-food
 ingredients: [food_a]
 equipment: []
 stages: []", "stages cannot be empty"),
-        validate_recipe_err_missing_steps: ("---
+            validate_recipe_err_missing_steps: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -245,7 +258,7 @@ ingredients: [food_a]
 equipment: []
 stages:
 - name: prep", "stages[0]: missing field `steps` at line 12 column 7"),
-        validate_recipe_err_empty_steps: ("---
+            validate_recipe_err_empty_steps: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -258,7 +271,7 @@ equipment: []
 stages:
 - name: prep
   steps: []", "steps cannot be empty"),
-        validate_recipe_err_name_locale: ("---
+            validate_recipe_err_name_locale: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -273,7 +286,7 @@ stages:
 - name: prep
   steps:
   - first", "name must have en_US translation"),
-        validate_recipe_err_stage_step_locale: ("---
+            validate_recipe_err_stage_step_locale: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -288,7 +301,7 @@ stages:
   steps:
   - en_GB: first
 ", "stage.steps must have en_US translation"),
-        validate_recipe_err_stage_invalid_duration: ("---
+            validate_recipe_err_stage_invalid_duration: ("---
 id: 56b7576b-efb2-4616-b2c4-02e3f381de4e
 locales: [en_US]
 published: 2022-01-01
@@ -304,5 +317,5 @@ stages:
   steps:
   - first
 ", "stages[0].cook_time: invalid value: string \"invalid\", expected a duration at line 13 column 14"),
-    }
+        }
 }
