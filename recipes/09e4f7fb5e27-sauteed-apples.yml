@@ -1,8 +1,11 @@
 ---
 id: 9849f80c-f66d-4960-880d-09e4f7fb5e27
 locales: ["en_US"]
+published: 2022-01-02
 name: Sauteed Apples
 slug: 09e4f7fb5e27-sauteed-apples
+category: dessert
+cuisine: american
 description: A quick and sweet fruit topping.
 ingredients:
   - 4 apples

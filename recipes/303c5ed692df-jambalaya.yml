@@ -1,8 +1,14 @@
 ---
 id: 681bf47b-d48e-4c42-942b-303c5ed692df
 locales: ["en_US"]
+published: 2021-12-27
 name: Jambalaya
 slug: 303c5ed692df-jambalaya
+category: dinner
+cuisine: cajun
+keywords:
+  - southern
+  - favorite
 description: This classic southern dish is a crowd pleaser.
 ingredients:
   - 3/4 pound smoked sausage

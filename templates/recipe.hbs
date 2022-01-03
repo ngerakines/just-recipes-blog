@@ -3,14 +3,27 @@
     {
       "@context": "https://schema.org",
       "@type": "Recipe",
-      "name": "{{ escape recipe.name }}",      
+      "name": "{{ escape recipe.name }}",
+      "datePublished": "{{ escape recipe.published }}",
+      "recipeCategory": "{{ escape recipe.category }}",
+      "recipeCuisine": "{{ escape recipe.cuisine }}",
 {{#if recipe.images }}
       "image": [
       {{#each recipe.images as |image| }}
       {{#if (gt @index 0) }},{{/if}}"{{ url ../locale ../recipe.slug}}{{ lookup image 1 }}"
 {{/each}}
       ],
-{{/if}}
+{{/if ~}}
+{{#if recipe.sd_cook_time ~}}
+    "cookTime": "{{ recipe.sd_cook_time }}",
+{{/if ~}}
+{{#if recipe.sd_prep_time ~}}
+    "prepTime": "{{ recipe.sd_prep_time }}",
+{{/if ~}}
+{{#if recipe.sd_total_time ~}}
+    "totalTime": "{{ recipe.sd_total_time }}",
+{{/if ~}}
+
 {{#if recipe.description }}
       "description": "{{ escape recipe.description }}",
 {{/if}}
@@ -26,6 +39,7 @@
         {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape step ~}}", "url": "{{ url ../locale ../recipe.slug}}#{{ fnv step }}"}
 {{/each ~}}
       ]
+      "keywords": "{{#each recipe.keywords as |kw| ~}}{{#if (gt @index 0) }},{{/if}}{{ kw }}{{/each ~}}",
     }
 </script>
 
@@ -35,8 +49,11 @@
 <p class="lead">{{ recipe.description }}</p>
 {{/if}}
 
-{{#if recipe.total_time ~}}
-<ul class="list-inline">
+<ul class="list-inline" id="recipe-metadata">
+    <li class="list-inline-item">Category: {{ recipe.category }}</li>
+    <li class="list-inline-item">Cuisine: {{ recipe.cuisine }}</li>
+    <li class="list-inline-item">Published: {{ recipe.published }}</li>
+    {{#if recipe.total_time ~}}
     <li class="list-inline-item">Total: {{ recipe.total_time }}</li>
     {{#if recipe.prep_time ~}}
     <li class="list-inline-item">Prep: {{ recipe.prep_time }}</li>
@@ -44,6 +61,15 @@
     {{#if recipe.cook_time ~}}
     <li class="list-inline-item">Cook: {{ recipe.cook_time }}</li>
     {{/if ~}}
+    {{/if ~}}
+</ul>
+
+{{#if recipe.keywords ~}}
+<ul class="list-inline" id="keywords">
+    <li class="list-inline-item"><strong>Keywords:</strong></li>
+    {{#each recipe.keywords as |keyword| }}
+    <li class="list-inline-item">{{ keyword }}</li>
+    {{/each}}
 </ul>
 {{/if ~}}
 

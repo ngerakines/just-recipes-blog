@@ -3,12 +3,13 @@ use humantime::format_duration;
 use serde::de::{Deserialize, Deserializer, MapAccess, Visitor};
 use serde::ser::{Serialize, Serializer};
 use serde::{Deserialize as DeserializeMacro, Serialize as SerializeMacro};
+use slugify::slugify;
 use std::collections::HashMap;
 use std::fmt;
 use std::time::Duration;
 use uuid::Uuid;
 
-use slugify::slugify;
+use crate::when::duration_iso8601;
 
 pub const US_ENGLISH: &str = "en_US";
 
@@ -16,9 +17,14 @@ pub const US_ENGLISH: &str = "en_US";
 pub struct Recipe {
     pub id: Uuid,
     pub locales: Vec<String>,
+    // TODO: Figure out how to handle dates.
+    pub published: String,
     pub name: LocalizedString,
     pub slug: LocalizedString,
+    pub category: LocalizedString,
+    pub cuisine: LocalizedString,
     pub description: Option<LocalizedString>,
+    pub keywords: Option<Vec<LocalizedString>>,
     pub ingredients: Vec<LocalizedString>,
     pub equipment: Vec<LocalizedString>,
     pub stages: Vec<Stage>,
@@ -91,11 +97,33 @@ impl Recipe {
                 false => Some(format_duration(total_time).to_string()),
                 true => None,
             },
+            sd_cook_time: match cook_time.is_zero() {
+                false => Some(duration_iso8601(cook_time)),
+                true => None,
+            },
+            sd_prep_time: match prep_time.is_zero() {
+                false => Some(duration_iso8601(prep_time)),
+                true => None,
+            },
+            sd_total_time: match total_time.is_zero() {
+                false => Some(duration_iso8601(total_time)),
+                true => None,
+            },
             name: self.name.clone().localized(locale.clone())?,
+            published: self.published.clone(),
             slug: self.slug.clone().localized(locale.clone())?,
             description: match self.description.clone() {
                 Some(x) => Some(x.localized(locale.clone())?),
                 None => None,
+            },
+            category: self.category.clone().localized(locale.clone())?,
+            cuisine: self.cuisine.clone().localized(locale.clone())?,
+            keywords: match &self.keywords {
+                None => Vec::new(),
+                Some(keywords) => keywords
+                    .iter()
+                    .map(|kw| kw.localized(locale.clone()).unwrap_or_default())
+                    .collect(),
             },
             ingredients: localied_vec(&self.ingredients, locale.clone())?,
             equipment: localied_vec(&self.equipment, locale.clone())?,
@@ -155,8 +183,12 @@ impl Recipe {
         Recipe {
             id: recipe_id,
             locales: vec![US_ENGLISH.to_string()],
+            published: String::from("2022-01-01"),
             name: LocalizedString::new(&name),
             slug: LocalizedString::new(&slug),
+            category: LocalizedString::new("Dinner"),
+            cuisine: LocalizedString::new("American"),
+            keywords: Some(vec![LocalizedString::new("favorite")]),
             description,
 
             ingredients,
@@ -218,14 +250,21 @@ pub struct RecipePartial {
     pub id: Uuid,
     pub alternate_locales: Vec<(String, String)>,
     pub name: String,
+    pub published: String,
     pub slug: String,
     pub description: Option<String>,
+    pub category: String,
+    pub cuisine: String,
+    pub keywords: Vec<String>,
     pub ingredients: Vec<String>,
     pub equipment: Vec<String>,
     pub stages: Vec<StagePartial>,
     pub cook_time: Option<String>,
     pub prep_time: Option<String>,
     pub total_time: Option<String>,
+    pub sd_cook_time: Option<String>,
+    pub sd_prep_time: Option<String>,
+    pub sd_total_time: Option<String>,
     pub images: Vec<(String, String)>,
 }
 
