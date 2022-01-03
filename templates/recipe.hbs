@@ -14,6 +14,7 @@
 {{/each}}
       ],
 {{/if ~}}
+    "keywords": "{{#each recipe.keywords as |kw| ~}}{{#if (gt @index 0) }},{{/if}}{{ kw }}{{/each ~}}",
 {{#if recipe.sd_cook_time ~}}
     "cookTime": "{{ recipe.sd_cook_time }}",
 {{/if ~}}
@@ -39,7 +40,6 @@
         {{#if (gt @index 0) }},{{/if}}{"@type": "HowToStep", "text": "{{~ escape step ~}}", "url": "{{ url ../locale ../recipe.slug}}#{{ fnv step }}"}
 {{/each ~}}
       ]
-      "keywords": "{{#each recipe.keywords as |kw| ~}}{{#if (gt @index 0) }},{{/if}}{{ kw }}{{/each ~}}",
     }
 </script>
 
