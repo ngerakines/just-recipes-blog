@@ -2,7 +2,7 @@ use anyhow::{anyhow, Result};
 use std::{collections::HashSet, fs, path::Path};
 use uuid::Uuid;
 
-use crate::model::{LocalizedString, Recipe, US_ENGLISH};
+use crate::model::{LocalizedString, Recipe, CATEGORIES, US_ENGLISH};
 
 #[cfg(feature = "validate")]
 pub fn validate_recipes(recipe_dir: &Path) -> Result<(), anyhow::Error> {
@@ -51,7 +51,9 @@ pub fn validate_recipe(recipe_file_name: &str, recipe_yaml: &str) -> Result<(Uui
         return Err(anyhow!("ingredients cannot be empty"));
     }
 
-    let categories = vec!["breakfast", "lunch", "beverage", "cocktail", "appetizer", "soup", "salad", "main dish", "side dish", "dessert", "break", "holiday", "entertaining"];
+    if !CATEGORIES.contains(&deserialized_recipe.category.localized(None)?.as_str()) {
+        return Err(anyhow!("stages cannot be empty"));
+    }
 
     validate_localized_string("name", &deserialized_recipe.name)?;
     validate_localized_string("slug", &deserialized_recipe.slug)?;

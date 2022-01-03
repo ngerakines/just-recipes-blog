@@ -1,7 +1,14 @@
 use handlebars::{Context, Handlebars, Helper, HelperResult, Output, RenderContext};
-use std::{collections::HashSet, fs, path::Path};
+use slugify::slugify;
+use std::{
+    collections::{HashMap, HashSet},
+    fs,
+    path::Path,
+};
 
-use crate::model::{HomeView, IndexView, Recipe, RecipeView, SearchView, SiteMapView, SiteView};
+use crate::model::{
+    HomeView, IndexView, LinkListView, Recipe, RecipeView, SearchView, SiteMapView, SiteView,
+};
 use crate::template::{EscapeHelper, FNVHelper, LocaleHelper};
 
 pub fn build_site(
@@ -89,6 +96,8 @@ pub fn build_site(
 
         sitemap_paths.push(site_locale.to_string());
 
+        let mut categorized_recipes: HashMap<String, Vec<(String, String)>> = HashMap::new();
+
         for recipe in &recipes {
             debug!("{}", recipe);
 
@@ -128,7 +137,27 @@ pub fn build_site(
                 let localized_recipe =
                     recipe.to_partial(Some(locale.clone()), site_locales, images.clone())?;
 
+                let self_url = format!(
+                    "{}{}/{}/",
+                    site.public_url, site_locale, localized_recipe.slug
+                );
+
                 sitemap_paths.push(format!("{}/{}/", site_locale, slug_root));
+
+                if let Some(x) = categorized_recipes.get_mut(&localized_recipe.category) {
+                    x.push((
+                        String::from(&self_url),
+                        String::from(&localized_recipe.name),
+                    ));
+                } else {
+                    categorized_recipes.insert(
+                        localized_recipe.category.clone(),
+                        vec![(
+                            String::from(&self_url),
+                            String::from(&localized_recipe.name),
+                        )],
+                    );
+                }
 
                 let recipe_html = handlebars
                     .render(
@@ -139,10 +168,7 @@ pub fn build_site(
                             recipe: localized_recipe.clone(),
                             site: site.clone(),
                             flat_steps: localized_recipe.flat_steps(),
-                            self_url: format!(
-                                "{}{}/{}/",
-                                site.public_url, site_locale, localized_recipe.slug
-                            ),
+                            self_url: self_url.clone(),
                         },
                     )
                     .unwrap();
@@ -201,6 +227,80 @@ pub fn build_site(
             panic!(
                 "unable to write search json to {}",
                 search_destination.display()
+            )
+        });
+
+        let mut category_links: Vec<(String, String)> = Vec::new();
+
+        for category in categorized_recipes.keys() {
+            let category_slug: String = slugify!(category);
+            let category_self_url: String = format!(
+                "{}{}/categories/{}/",
+                &site.public_url, &site_locale, &category_slug
+            );
+
+            category_links.push((category_self_url.clone(), category.to_string()));
+
+            let category_recipes = categorized_recipes.get(category).unwrap();
+            let category_html = handlebars
+                .render(
+                    "link_list",
+                    &LinkListView {
+                        locale: site_locale.clone(),
+                        title: format!("Just Recipes - Category - {}", category),
+                        links_label: String::from(category),
+                        links: category_recipes.clone(),
+                        site: site.clone(),
+                        self_url: category_self_url.clone(),
+                    },
+                )
+                .expect("unable to render categories");
+
+            let category_destination = Path::new(&locale_root)
+                .join("categories")
+                .join(category_slug)
+                .join("index.html");
+            fs::create_dir_all(category_destination.parent().unwrap()).unwrap_or_else(|_| {
+                panic!(
+                    "unable to create category root {}",
+                    category_destination.display()
+                )
+            });
+            fs::write(&category_destination, category_html).unwrap_or_else(|_| {
+                panic!(
+                    "unable to write category to {}",
+                    category_destination.display()
+                )
+            });
+        }
+
+        let categories_html = handlebars
+            .render(
+                "link_list",
+                &LinkListView {
+                    locale: site_locale.clone(),
+                    title: "Just Recipes - Categories".to_string(),
+                    links_label: String::from("Categories"),
+                    links: category_links,
+                    site: site.clone(),
+                    self_url: format!("{}{}/categories/", &site.public_url, &site_locale),
+                },
+            )
+            .expect("unable to render categories");
+
+        let categories_destination = Path::new(&locale_root)
+            .join("categories")
+            .join("index.html");
+        fs::create_dir_all(categories_destination.parent().unwrap()).unwrap_or_else(|_| {
+            panic!(
+                "unable to create category root {}",
+                categories_destination.display()
+            )
+        });
+        fs::write(&categories_destination, categories_html).unwrap_or_else(|_| {
+            panic!(
+                "unable to write categories to {}",
+                categories_destination.display()
             )
         });
     }

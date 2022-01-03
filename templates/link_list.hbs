@@ -1,0 +1,17 @@
+{{#*inline "page" }}
+
+<div class="row">
+  <div class="col">
+    <h1>{{ links_label }}</h1>
+    <ul>
+      {{#each links as |link| ~}}
+      <li>
+        <a href="{{~ lookup link 0 ~}}">{{~ lookup link 1 ~}}</a>
+      </li>
+      {{/each ~}}
+    </ul>
+  </div>
+</div>
+
+{{/inline}}
+{{> root show_search=true }}
