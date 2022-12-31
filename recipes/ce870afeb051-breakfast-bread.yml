@@ -1,0 +1,63 @@
+---
+id: 35b25ad7-701f-49f2-971c-ce870afeb051
+locales:
+  - en_US
+published: 2022-01-01
+name:
+  en_US: Breakfast Bread
+slug:
+  en_US: ce870afeb051-breakfast-bread
+category:
+  en_US: Breakfast
+cuisine:
+  en_US: American
+description: "A delicious bread knock-off of Ohana's breakfast bread. Can be used for bread pudding or just snacking."
+keywords:
+  - en_US: favorite
+ingredients:
+- 1 cup crushed pinapple (I just buy a small can)
+- 1 cup unsweetened coconut
+- 1 cup sugar
+- 1 tablespoon cornstarch 
+- 1 3/4 cups water
+- 1 egg yolk
+- 2 tablespoons vegatable shortening
+- 1/2 teaspoon salt
+- 1/3 cup sugar
+- 1 tablespoon instant yeast
+- 4 1/2 cup / 540 g high gluten/bread flour
+equipment: ["stand mixer"]
+stages:
+  - name: Making the Filling
+    prep_time: 5 minutes
+    steps:
+      - Combine pineapple and coconut in medium small bowl.
+      - Combine sugar and cornstarch in small bowl, making sure to break up cornstach lumps.
+      - Add sugar and cornstarch mixture to pineapple and coconut mixture.
+      - Refrigerate mixture for one hour before using in bread.
+    footer: When I don't want to do make dishes, I just make a crater in the pineapple and mix the sugar/cornstarch there.
+  - name: Making the Dough
+    cook_time: 15 minutes
+    steps:
+      - In a stand mixer, combine egg yolk, water, and shortening.
+      - Gently whisk this mixture to break apart the yolk and shortening.
+      - Add in salt, sugar. and yeast.
+      - Add in flour. 
+      - Mix dough with dough hook attatchment until dough picks up on hook and the sides of the mixing bowl are clean. 
+      - Place dough in warm place. I use a "proof" setting on my oven, but a not-in-use microwave works as well.
+      - Let the dough rise until doubled in size, roughly one hour.
+    footer: If you're unsure how old your yeast is, let is sit for 15 minutes after adding it to your mixture. If it blooms,you're good to go. If it looks the same, toss it and restart. 
+  - name: Assembling
+    prep_time: 20 minutes
+    steps:
+      - Roll the proofed dough onto a floured surface until it is roughly 1/2 an inch thick. Form it into a uniform shape, a square or circle is fine.
+      - Spread the pinapple/coconut filling on top of the dough, leaving about 1 1/2 around the edge. 
+      - Fold the dough onto itself, capturing the filling inside the dough.
+      - Using a pizza cutter or bench scraper, chop the dough into roughly equal pieces. I make them roughly 2x2, but it doesn't matter.
+      - Take the cut pieces and spread them evenly onto a greased 9x13 pan. 
+      - Proof the dough in a warm oven (roughly 110 F) until rises roughly half up the pan (about 45 minutes). 
+    footer: The dough and filling will be VERY WET and difficutl to handle. Your bench will be wet and that's okay. Whenever the filling falls out I just stuff it right in. I even put extra filling between all the pieces in the pan before proofing.
+  - name: Bake
+    cook_time: 25 minutes
+    steps:
+      - Place the proofed dough in a 325 F oven and bake for 20-25 minutes. The dough will be golden brown and any wet filling will be bubbly.
