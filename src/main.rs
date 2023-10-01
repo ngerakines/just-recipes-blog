@@ -16,8 +16,6 @@ use std::{convert::Infallible, net::SocketAddr};
 #[cfg(feature = "server")]
 use tower_http::services::ServeDir;
 
-use uuid::Uuid;
-
 use jrb::model::{Recipe, SiteView};
 use jrb::site::build_site;
 
@@ -103,7 +101,7 @@ enum Command {
     /// Generate and stub a new recipe file.
     Init {
         #[structopt(long)]
-        id: Option<Uuid>,
+        id: Option<String>,
 
         #[structopt(long)]
         name: Option<String>,
@@ -216,7 +214,7 @@ pub async fn shutdown_signal() {
 
 fn cmd_init(
     recipe_dir: &Path,
-    recipe_id: Option<Uuid>,
+    recipe_id: Option<String>,
     name: Option<String>,
     mock: bool,
 ) -> Result<(), anyhow::Error> {

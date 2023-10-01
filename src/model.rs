@@ -7,7 +7,7 @@ use slugify::slugify;
 use std::collections::HashMap;
 use std::fmt;
 use std::time::Duration;
-use uuid::Uuid;
+use rand::{distributions::Alphanumeric, Rng};
 
 use crate::when::duration_iso8601;
 
@@ -31,7 +31,7 @@ pub const CATEGORIES: &[&str; 13] = &[
 
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct Recipe {
-    pub id: Uuid,
+    pub id: String,
     pub locales: Vec<String>,
     // TODO: Figure out how to handle dates.
     pub published: String,
@@ -93,7 +93,7 @@ impl Recipe {
         let total_time = cook_time + prep_time;
 
         Ok(RecipePartial {
-            id: self.id,
+            id: self.id.clone(),
             alternate_locales: self
                 .locales
                 .clone()
@@ -156,27 +156,20 @@ impl Recipe {
         })
     }
 
-    pub fn init(arg_recipe_id: Option<Uuid>, arg_name: Option<String>, mock: bool) -> Self {
-        let recipe_id: Uuid = match arg_recipe_id {
+    pub fn init(arg_recipe_id: Option<String>, arg_name: Option<String>, mock: bool) -> Self {
+        let recipe_id: String = match arg_recipe_id {
             Some(value) => value,
-            None => Uuid::new_v4(),
+            None => rand::thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(7)
+            .map(char::from)
+            .collect(),
         };
         let name: String = match arg_name {
             Some(value) => value,
             None => "A wonderful new recipe".to_string(),
         };
-        let short_id: String = recipe_id
-            .to_hyphenated()
-            .to_string()
-            .chars()
-            .rev()
-            .into_iter()
-            .take(12)
-            .collect::<String>()
-            .chars()
-            .rev()
-            .collect();
-        let slug: String = slugify!(format!("{}-{}", short_id, name).as_str());
+        let slug: String = slugify!(format!("{}-{}", recipe_id, name).as_str());
         let description: Option<LocalizedString> = match mock {
             true => Some(LocalizedString::new(
                 &"This recipe is pretty neat.".to_string(),
@@ -266,7 +259,7 @@ impl Stage {
 
 #[derive(Debug, Clone, PartialEq, SerializeMacro, DeserializeMacro)]
 pub struct RecipePartial {
-    pub id: Uuid,
+    pub id: String,
     pub alternate_locales: Vec<(String, String)>,
     pub name: String,
     pub published: String,
