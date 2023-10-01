@@ -153,7 +153,7 @@ fn cmd_build(
         templates_dir,
         public_dir,
         site_locales,
-        SiteView::new(public_url, &built_info::PKG_VERSION.to_string()),
+        SiteView::new(public_url, built_info::PKG_VERSION),
     )
 }
 

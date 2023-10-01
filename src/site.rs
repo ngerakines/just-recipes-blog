@@ -82,7 +82,7 @@ pub fn build_site(
     site_links.insert(site.public_url.clone());
 
     for recipe_file in &recipe_files {
-        let recipe_yaml = fs::read_to_string(&recipe_file)?;
+        let recipe_yaml = fs::read_to_string(recipe_file)?;
         let deserialized_recipe: Recipe = serde_yaml::from_str(&recipe_yaml)?;
 
         if !recipe_ids.insert(deserialized_recipe.id.to_string()) {
@@ -101,7 +101,7 @@ pub fn build_site(
     });
 
     for site_locale in site_locales {
-        let locale_root = Path::new(public_dir).join(&site_locale);
+        let locale_root = Path::new(public_dir).join(site_locale);
 
         let mut search_views: Vec<SearchView> = Vec::with_capacity(recipe_files.len());
 
@@ -437,7 +437,7 @@ fn write_indexes(
     )?;
 
     let index_destination = Path::new(&base_dir).join("index.html");
-    fs::write(&index_destination, index_html)?;
+    fs::write(index_destination, index_html)?;
     Ok(())
 }
 
@@ -471,7 +471,7 @@ fn write_oembed(
     )?;
 
     let html_destination = Path::new(&base_dir).join("oembed.html");
-    fs::write(&html_destination, oembed_html)?;
+    fs::write(html_destination, oembed_html)?;
 
     let oembed_json = serde_json::to_string(&OembedJsonView{
         response_type: String::from("rich"),
@@ -481,7 +481,7 @@ fn write_oembed(
         author_url: Some(String::from("https://justrecipes.blog/")),
         provider_name: Some(String::from("Just Recipes Blog")),
         provider_url: Some(String::from("https://justrecipes.blog/")),
-        html: format!("<iframe width=\"100%\" height=\"270\" scrolling=\"no\" frameborder=\"no\" src=\"{}\"></iframe>", base_url.join("oembed.html")?.to_string()),
+        html: format!("<iframe width=\"100%\" height=\"270\" scrolling=\"no\" frameborder=\"no\" src=\"{}\"></iframe>", base_url.join("oembed.html")?),
         width: Some(550),
         height: Some(270),
         cache_age: Some(String::from("3153600000")),
@@ -491,7 +491,7 @@ fn write_oembed(
     })?;
 
     let json_destination = Path::new(&base_dir).join("oembed.json");
-    fs::write(&json_destination, oembed_json)?;
+    fs::write(json_destination, oembed_json)?;
 
     Ok(())
 }

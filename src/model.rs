@@ -169,23 +169,23 @@ impl Recipe {
             Some(value) => value,
             None => "A wonderful new recipe".to_string(),
         };
-        let slug: String = slugify!(format!("{}-{}", recipe_id, name).as_str());
+        // let slug: String = slugify!(format!("{}-{}", recipe_id, name).as_str());
         let description: Option<LocalizedString> = match mock {
             true => Some(LocalizedString::new(
-                &"This recipe is pretty neat.".to_string(),
+                "This recipe is pretty neat.",
             )),
             false => None,
         };
         let ingredients: Vec<LocalizedString> = match mock {
             true => vec![
-                LocalizedString::new(&"celery".to_string()),
-                LocalizedString::new(&"onion".to_string()),
-                LocalizedString::new(&"bell pepper".to_string()),
+                LocalizedString::new("celery"),
+                LocalizedString::new("onion"),
+                LocalizedString::new("bell pepper"),
             ],
             false => Vec::new(),
         };
         let equipment: Vec<LocalizedString> = match mock {
-            true => vec![LocalizedString::new(&"dutch oven".to_string())],
+            true => vec![LocalizedString::new("dutch oven")],
             false => Vec::new(),
         };
         let stages: Vec<Stage> = match mock {
@@ -193,11 +193,11 @@ impl Recipe {
             false => Vec::new(),
         };
         Recipe {
-            id: recipe_id,
+            id: recipe_id.clone(),
             locales: vec![US_ENGLISH.to_string()],
             published: String::from("2022-01-01"),
             name: LocalizedString::new(&name),
-            slug: LocalizedString::new(&slug),
+            slug: LocalizedString::new(&slugify!(format!("{}-{}", recipe_id, name).as_str())),
             category: LocalizedString::new("Dinner"),
             cuisine: LocalizedString::new("American"),
             keywords: Some(vec![LocalizedString::new("favorite")]),
@@ -250,8 +250,8 @@ impl Stage {
             description: None,
             footer: None,
             steps: vec![
-                LocalizedString::new(&"First do this".to_string()),
-                LocalizedString::new(&"Then do that".to_string()),
+                LocalizedString::new("First do this"),
+                LocalizedString::new("Then do that"),
             ],
         }
     }
@@ -282,7 +282,7 @@ pub struct RecipePartial {
 
 impl RecipePartial {
     pub fn flat_steps(&self) -> Vec<String> {
-        let size = (&self.stages).iter().map(|s| s.steps.len()).sum();
+        let size = self.stages.iter().map(|s| s.steps.len()).sum();
         let mut all_steps = Vec::with_capacity(size);
         for stage in &self.stages {
             all_steps.extend(stage.steps.clone());
@@ -391,7 +391,7 @@ impl LocalizedString {
         if let Some(value) = self.inner.get(&US_ENGLISH.to_string()) {
             return Ok(value.to_string());
         }
-        return Err(anyhow!("Missing locale: {}", search_locale));
+        Err(anyhow!("Missing locale: {}", search_locale))
     }
 
     pub fn new(value: &str) -> Self {
@@ -411,7 +411,6 @@ impl fmt::Display for LocalizedString {
             "{}",
             self.inner
                 .clone()
-                .into_iter()
                 .into_iter()
                 .map(|(key, value)| format!("{}={}", key, value))
                 .collect::<Vec<String>>()
