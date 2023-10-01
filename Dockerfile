@@ -1,10 +1,13 @@
-FROM rust:1.57 as builder
-WORKDIR /usr/src/jrb
-COPY . .
-RUN cargo install --path .
-RUN find /usr/src/jrb
+FROM rust:1-bookworm as builder
+ENV HOME=/root
+WORKDIR /app/
+COPY Cargo.toml Cargo.lock build.rs /app/
+COPY src/ /app/src/
+RUN find /app/
+ARG CARGO_ARGS=""
+RUN --mount=type=cache,target=/usr/local/cargo/registry --mount=type=cache,target=/root/app/target cargo build --release --color never ${CARGO_ARGS}
 
-FROM debian:buster-slim
-RUN apt-get update && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /usr/local/cargo/bin/jrb /usr/local/bin/jrb
-CMD ["jrb"]
+FROM debian:bookworm-slim
+ENV RUST_LOG="warning"
+COPY --from=builder /app/target/release/jrb /usr/local/bin/jrb
+CMD ["sh", "-c", "/usr/local/bin/jrb"]
